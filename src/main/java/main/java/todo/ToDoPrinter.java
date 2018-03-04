@@ -8,33 +8,46 @@ import java.util.ArrayList;
  */
 public class ToDoPrinter {
 
-    private static ToDoPrinter instance;
-
-    private ToDoPrinter() {
-    }
+    private ToDoPrintable toDo;
 
     public void printToDo(ToDoPrintable toDo) {
-        printXMLToDo(toDo);
+        this.toDo = toDo;
+        printXMLToDo();
     }
 
-    private void printXMLToDo(ToDoPrintable toDo) {
-        System.out.print("<todo");
-        System.out.print(getXMLToDoDetails(toDo));
-        System.out.print(">");
+    private void printXMLToDo() {
+        if (toDo instanceof Task) {
+            System.out.print(getXMLTaskStructure());
+        }
         if (toDo instanceof Project) {
-            System.out.print(getXMLProjectsTaskList((Project) toDo));
+            System.out.print(getXMLProjectStructure());
         }
         System.out.print("</todo>");
     }
 
-    private String getXMLToDoDetails(ToDoPrintable toDo) {
-        String taskDetails = " title=\"" + toDo.getTitle() + "\" description=\"" + toDo.getDescription() + "\"";
-        taskDetails += getXMLTaskDateDueIfNotNull(toDo);
+    private String getXMLTaskStructure() {
+        String taskStructure = "<task ";
+        taskStructure += getXMLToDoDetails();
+        taskStructure += "/>";
+        return taskStructure;
+    }
+
+    private String getXMLProjectStructure() {
+        String projectStructure = "<project ";
+        projectStructure += getXMLToDoDetails() + ">";
+        projectStructure += getXMLProjectsTaskList();
+        projectStructure += "</project>";
+        return projectStructure;
+    }
+
+    private String getXMLToDoDetails() {
+        String taskDetails = "title=\"" + toDo.getTitle() + "\" description=\"" + toDo.getDescription() + "\"";
+        taskDetails += getXMLTaskDateDueIfNotNull();
         taskDetails += " outcome=\"" + toDo.getOutcome() + "\"";
         return taskDetails;
     }
 
-    private String getXMLTaskDateDueIfNotNull(ToDoPrintable toDo) {
+    private String getXMLTaskDateDueIfNotNull() {
         String taskDateDue = "";
         try {
             taskDateDue += " date_due=\"" + toDo.getDateDue() + "\"";
@@ -44,10 +57,10 @@ public class ToDoPrinter {
         return taskDateDue;
     }
 
-    private String getXMLProjectsTaskList(Project toDo) {
-        ArrayList<Task> projectTasks = toDo.getTaskList();//getTasksList();
+    private String getXMLProjectsTaskList() {
+        ArrayList<Task> projectTasks = ((Project) toDo).getTaskList();
         String tasks = "";
-        tasks = projectTasks.stream().map((task) -> "<task " + getXMLToDoDetails(task) + "/>").reduce(tasks, String::concat);
+        tasks = projectTasks.stream().map((task) -> "<task " + getXMLToDoDetails() + "/>").reduce(tasks, String::concat);
         return tasks;
     }
 }

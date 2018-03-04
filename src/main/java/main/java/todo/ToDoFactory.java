@@ -15,8 +15,6 @@ public class ToDoFactory {
     private ToDoFactory() {
         this.context = new ClassPathXmlApplicationContext("Beans.xml");
     }
-
-    ;
     
     public static ToDoFactory getInstance() {
         if (ToDoFactory.instance == null) {
@@ -35,11 +33,6 @@ public class ToDoFactory {
             default:
                 throw new WrongToDoTypeException(type + " is not a ToDo type");
         }
-    }
-
-    public static ToDoPrinter getToDoPrinter() {
-        ToDoFactory toDoFactory = ToDoFactory.getInstance();
-        return (ToDoPrinter) toDoFactory.context.getBean("todoprinter");
     }
 
     public Task getTaskBean(String guid) {

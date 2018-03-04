@@ -9,8 +9,8 @@ public class Application {
 
     public static void main(String[] args) throws WrongToDoTypeException {
 
-        ToDoPrinter toDoPrinter = (ToDoPrinter) ToDoFactory.getToDoPrinter();
-
+        ToDoPrinter toDoPrinter = new ToDoPrinter();
+        
         Task taskBean = (Task) ToDoFactory.getBean("Task", "task01");
         Project projectBean = (Project) ToDoFactory.getBean("Project", "project01");
         
