@@ -16,24 +16,35 @@ public class ToDoPrinter {
     public void printToDo(ToDoPrintable toDo) {
         printXMLToDo(toDo);
     }
-    
-    private void printXMLToDo(ToDoPrintable toDo){
-            System.out.print("<todo");
-            System.out.print(" title=\"" + toDo.getTitle() + "\" description=\"" + toDo.getDescription() + "\"");
-        try {
-            System.out.print(" date_due=\"" + toDo.getDateDue() +"\"");
-        } catch (ToDoDueDateNullException e) {
 
-        } finally {
-            System.out.print(" outcome=\"" + toDo.getOutcome() + "\">");
-            if (toDo instanceof Project) {
-                System.out.print(getXMLProjectList((Project) toDo));
-            }
-            System.out.print("</todo>");
+    private void printXMLToDo(ToDoPrintable toDo) {
+        System.out.print("<todo");
+        System.out.print(getXMLToDoDetails(toDo));
+        System.out.print("\">");
+        if (toDo instanceof Project) {
+            System.out.print(getXMLProjectsTaskList((Project) toDo));
         }
-    } 
+        System.out.print("</todo>");
+    }
 
-    private String getXMLProjectList(Project toDo) {
+    private String getXMLToDoDetails(ToDoPrintable toDo) {
+        String taskDetails = " title=\"" + toDo.getTitle() + "\" description=\"" + toDo.getDescription() + "\"";
+        taskDetails += getXMLTaskDateDueIfNotNull(toDo);
+        taskDetails = " outcome=\"" + toDo.getOutcome();
+        return taskDetails;
+    }
+
+    private String getXMLTaskDateDueIfNotNull(ToDoPrintable toDo) {
+        String taskDateDue = "";
+        try {
+            taskDateDue += " date_due=\"" + toDo.getDateDue() + "\"";
+        } catch (ToDoDueDateNullException e) {
+            ;
+        }
+        return taskDateDue;
+    }
+
+    private String getXMLProjectsTaskList(Project toDo) {
         ArrayList<Task> projectTasks = toDo.getTaskList();//getTasksList();
         String tasks = "";
         tasks = projectTasks.stream().map((task) -> "<task title=\"" + task.getTitle() + "\" description=\"" + task.getDescription() + "\"/>").reduce(tasks, String::concat);
