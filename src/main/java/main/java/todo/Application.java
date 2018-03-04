@@ -21,7 +21,7 @@ public class Application {
         cal.set(Calendar.YEAR, 2018);
         cal.set(Calendar.MONTH, Calendar.MARCH);
         cal.set(Calendar.DAY_OF_MONTH, 6);
-        taskBean2.setDateDue(cal.getTime());
+        projectBean.setDateDue(cal.getTime());
 
         taskBean.setProject(projectBean);
         projectBean.attachTask(taskBean2);

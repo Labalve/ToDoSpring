@@ -20,7 +20,7 @@ public class ToDoPrinter {
     private void printXMLToDo(ToDoPrintable toDo) {
         System.out.print("<todo");
         System.out.print(getXMLToDoDetails(toDo));
-        System.out.print("\">");
+        System.out.print(">");
         if (toDo instanceof Project) {
             System.out.print(getXMLProjectsTaskList((Project) toDo));
         }
@@ -30,7 +30,7 @@ public class ToDoPrinter {
     private String getXMLToDoDetails(ToDoPrintable toDo) {
         String taskDetails = " title=\"" + toDo.getTitle() + "\" description=\"" + toDo.getDescription() + "\"";
         taskDetails += getXMLTaskDateDueIfNotNull(toDo);
-        taskDetails = " outcome=\"" + toDo.getOutcome();
+        taskDetails += " outcome=\"" + toDo.getOutcome() + "\"";
         return taskDetails;
     }
 
@@ -47,7 +47,7 @@ public class ToDoPrinter {
     private String getXMLProjectsTaskList(Project toDo) {
         ArrayList<Task> projectTasks = toDo.getTaskList();//getTasksList();
         String tasks = "";
-        tasks = projectTasks.stream().map((task) -> "<task title=\"" + task.getTitle() + "\" description=\"" + task.getDescription() + "\"/>").reduce(tasks, String::concat);
+        tasks = projectTasks.stream().map((task) -> "<task " + getXMLToDoDetails(task) + "/>").reduce(tasks, String::concat);
         return tasks;
     }
 }
