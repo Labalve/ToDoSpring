@@ -5,14 +5,14 @@
        xsi:schemaLocation = "http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     
-    <bean id = "task01" class = "main.java.todo.Task">
-        <property name = "title" value = "Cleaning"/>
-        <property name = "description" value = "Don't forget to scrub the floors"/>
+    <bean id = "test_task01" class = "todo.Task">
+        <property name = "title" value = "test task01 title"/>
+        <property name = "description" value = "test task01 description"/>
     </bean>
             
-    <bean id = "project01" class = "main.java.todo.Project">
-        <property name = "title" value = "Household"/>
-        <property name = "description" value = "Trying to keep it clean"/>
+    <bean id = "test_project01" class = "todo.Project">
+        <property name = "title" value = "test project01 title"/>
+        <property name = "description" value = "test project01 description"/>
     </bean>
     
 </beans>
