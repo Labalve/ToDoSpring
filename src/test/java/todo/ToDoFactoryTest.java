@@ -1,17 +1,10 @@
 package todo;
 
-import todo.AppConfig;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Calendar;
-import java.util.Date;
 import org.junit.Assert;
 
 /**
@@ -23,14 +16,14 @@ import org.junit.Assert;
 @ContextConfiguration(classes = {AppConfig.class})
 public class ToDoFactoryTest {
 
-    @org.junit.Test
+    @Test
     public void testTaskBeanCreation() throws WrongToDoTypeException  {
         Task taskBean = (Task) ToDoFactory.getBean("Task", "test_task01");
         Assert.assertEquals("test task01 title", taskBean.getTitle());
         Assert.assertEquals("test task01 description", taskBean.getDescription());
     }
         
-    @org.junit.Test
+    @Test
     public void testProjectBeanCreation() throws WrongToDoTypeException  {
         Project taskBean = (Project) ToDoFactory.getBean("Project", "test_project01");
         Assert.assertEquals("test project01 title", taskBean.getTitle());
