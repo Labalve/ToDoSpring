@@ -1,5 +1,6 @@
 package todo;
 
+import java.util.ArrayList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,6 +32,19 @@ public class ProjectTest {
         cal.set(Calendar.MONTH, Calendar.JANUARY);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         return cal.getTime();
+    }
+    
+    @Test
+    public void testTaskBinding() {
+        Project projectBean = new Project();
+        Task taskBean01 = new Task();
+        Task taskBean02 = new Task();
+        projectBean.attachTask(taskBean01);
+        taskBean02.setProject(projectBean);
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(taskBean01);
+        tasks.add(taskBean02);
+        Assert.assertEquals(tasks, projectBean.getTaskList());
     }
     
     @Test(expected = ToDoDueDateNullException.class)

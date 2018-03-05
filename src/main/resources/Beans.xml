@@ -9,6 +9,11 @@
         <property name = "title" value = "test task01 title"/>
         <property name = "description" value = "test task01 description"/>
     </bean>
+    
+    <bean id = "test_task02" class = "todo.Task">
+        <property name = "title" value = "test task02 title"/>
+        <property name = "description" value = "test task02 description"/>
+    </bean>
             
     <bean id = "test_project01" class = "todo.Project">
         <property name = "title" value = "test project01 title"/>

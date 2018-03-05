@@ -32,9 +32,6 @@ public class Project extends ToDo {
     
     public ArrayList<Task> getTaskList(){
         return tasks;
-//        String taskList = "";
-//        taskList = tasks.stream().map((task) -> task.getTitle() + ": " + task.getDescription() + "\n").reduce(taskList, String::concat);
-//        return taskList;
     }
     
 }
