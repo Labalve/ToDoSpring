@@ -5,6 +5,17 @@
        xsi:schemaLocation = "http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     
+    <bean id = "mock_database_user01" class = "todo.DatabaseUser">
+        <property name = "name" value = "root"/>
+        <property name = "password" value = ""/>
+    </bean>
+    
+    <bean id = "mock_database01" class = "todo.Database">
+        <property name = "dbms" value = "mysql"/>
+        <property name = "serverName" value = "127.0.0.1"/>
+        <property name = "portNumber" value = "3306"/>
+    </bean>
+    
     <bean id = "test_task01" class = "todo.Task">
         <property name = "title" value = "test task01 title"/>
         <property name = "description" value = "test task01 description"/>
