@@ -14,23 +14,29 @@ import java.sql.SQLException;
 public class DatabaseConnector {
     
     static private String defaultDatabaseUserId = "mock_database_user01";
+    static private String defaultDatabaseServerId = "mock_database_server01";
     
     private DatabaseUser databaseUser;
-    private Database database;
+    private DatabaseServer databaseServer;
     private Properties connectionProperties;
 
     public DatabaseConnector(){
         AbstractApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
-        databaseUser = (DatabaseUser) context.getBean("mock_database_user01");
-        database = (Database) context.getBean("mock_database01");
+        databaseUser = (DatabaseUser) context.getBean(defaultDatabaseUserId);
+        databaseServer = (DatabaseServer) context.getBean(defaultDatabaseServerId);
+    }
+    
+    public DatabaseConnector(String databaseUserId, String databaseServerId){
+        AbstractApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+        databaseUser = (DatabaseUser) context.getBean(databaseUserId);
+        databaseServer = (DatabaseServer) context.getBean(databaseServerId);
     }
     
     public Connection getDatabaseConnection() throws SQLException
     {
-        return DriverManager.getConnection(
-                   "jdbc:" + database.getDbms() + "://" +
-                   database.getServerName() +
-                   ":" + database.getPortNumber() + "/",
+        return DriverManager.getConnection("jdbc:" + databaseServer.getDbms() + "://" +
+                   databaseServer.getServerName() +
+                   ":" + databaseServer.getPortNumber() + "/",
                    getConnectionProperties());
     }
     

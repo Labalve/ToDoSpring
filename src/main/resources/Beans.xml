@@ -10,9 +10,9 @@
         <property name = "password" value = ""/>
     </bean>
     
-    <bean id = "mock_database01" class = "todo.Database">
+    <bean id = "mock_database_server01" class = "todo.DatabaseServer">
         <property name = "dbms" value = "mysql"/>
-        <property name = "serverName" value = "127.0.0.1"/>
+        <property name = "serverName" value = "localhost"/>
         <property name = "portNumber" value = "3306"/>
     </bean>
     

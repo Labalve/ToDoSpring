@@ -4,7 +4,7 @@ package todo;
  *
  * @author Labalve
  */
-public class Database {
+public class DatabaseServer {
 
     private String dbms;
     private String serverName;

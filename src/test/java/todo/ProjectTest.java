@@ -23,7 +23,7 @@ public class ProjectTest {
     public void testProjectDateSetting() throws WrongToDoTypeException, ToDoDueDateNullException  {
         Project projectBean = new Project();
         projectBean.setDateDue(setDateForTheTest());
-        Assert.assertEquals(setDateForTheTest(), projectBean.getDateDue());
+        Assert.assertEquals(setDateForTheTest().getTime(), projectBean.getDateDue().getTime());
     }
     
     private Date setDateForTheTest(){
