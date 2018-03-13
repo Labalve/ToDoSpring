@@ -24,7 +24,7 @@ public class DatabaseToDoInserterTest {
         } catch (SQLException e) {
             fail("saving failed with message: " + e.getMessage());
         }
-        //dropTestDatabase();
+        dropTestDatabase();
     }
 
     @Test
@@ -33,7 +33,7 @@ public class DatabaseToDoInserterTest {
         createTestDatabase();
         createTestTables();
         Project projectBean = (Project) ToDoFactory.getBean("Project", "test_project01");
-        DatabaseToDoInserter databaseInserter = new DatabaseToDoInserter();
+        DatabaseToDoInserter databaseInserter = new DatabaseToDoInserter("mock_database01");
         try {
             databaseInserter.saveToDo(projectBean);
         } catch (SQLException e) {
@@ -42,6 +42,23 @@ public class DatabaseToDoInserterTest {
         dropTestDatabase();
     }
 
+    @Test
+    public void testTaskWithProjectInsertion() throws WrongToDoTypeException, SQLException {
+        dropTestDatabase();
+        createTestDatabase();
+        createTestTables();
+        Task taskBean = (Task) ToDoFactory.getBean("Task", "test_task01");
+        Project projectBean = (Project) ToDoFactory.getBean("Project", "test_project01");
+        taskBean.setProject(projectBean);
+        DatabaseToDoInserter databaseInserter = new DatabaseToDoInserter("mock_database01");
+        try {
+            databaseInserter.saveToDo(taskBean);
+        } catch (SQLException e) {
+            fail("saving failed with message: " + e.getMessage());
+        }
+        dropTestDatabase();
+    }
+    
     private void createTestDatabase() throws SQLException {
         DatabaseConnector databaseConnector = new DatabaseConnector();
         Connection databaseConnection = databaseConnector.getDatabaseConnection();
@@ -88,18 +105,18 @@ public class DatabaseToDoInserterTest {
     }
 
     private String getCreateTaskTableCommand() {
-        String createCommand = "CREATE TABLE tasks ( id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
+        String createCommand = "CREATE TABLE tasks ( uuid VARCHAR(50) PRIMARY KEY,"
                 + "title VARCHAR(30),"
                 + "description VARCHAR(120),"
-                + "project_id INT(6) UNSIGNED,"
+                + "project_id VARCHAR(50),"
                 + "date_due DATETIME,"
                 + "outcome VARCHAR(30),"
-                + "FOREIGN KEY (project_id) REFERENCES projects(id));";
+                + "FOREIGN KEY (project_id) REFERENCES projects(uuid));";
         return createCommand;
     }
 
     private String getCreateProjectTableCommand() {
-        String createCommand = "CREATE TABLE projects ( id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
+        String createCommand = "CREATE TABLE projects ( uuid VARCHAR(50) PRIMARY KEY,"
                 + "title VARCHAR(30),"
                 + "description VARCHAR(120),"
                 + "date_due DATETIME,"

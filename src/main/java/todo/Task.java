@@ -14,8 +14,8 @@ public class Task extends ToDo {
         project.attachTask(this);
     }
     
-    String getProject() {
-        return project_id;
+    Project getProject() {
+        return project;
     }
 
 }

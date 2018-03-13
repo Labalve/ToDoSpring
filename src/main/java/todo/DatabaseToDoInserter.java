@@ -31,10 +31,19 @@ public class DatabaseToDoInserter {
 
     public void saveToDo(ToDo toDoBean) throws SQLException {
         if (toDoBean instanceof Task) {
+            if(null != ((Task) toDoBean).getProject()){
+                saveParentProject((Task) toDoBean);
+            }
             insertCommand = getTaskInsertCommand((Task) toDoBean);
         } else if (toDoBean instanceof Project) {
             insertCommand = getProjectInsertCommand((Project) toDoBean);
         }
+        handleInsert();
+        databaseConnection.close();
+    }
+    
+    private void saveParentProject(Task taskBean) throws SQLException {
+        insertCommand = getProjectInsertCommand(taskBean.getProject());
         handleInsert();
     }
 
@@ -42,14 +51,13 @@ public class DatabaseToDoInserter {
         preparedStatement = databaseConnection.prepareStatement("USE " + databaseName + ";");
         preparedStatement.execute();
         preparedStatement = databaseConnection.prepareStatement(insertCommand);
-        preparedStatement.executeUpdate();
+        preparedStatement.execute();
         preparedStatement.close();
-        databaseConnection.close();
     }
 
     private String getTaskInsertCommand(Task taskBean) {
-        String insertCommand = "INSERT INTO " + TASKS_TABLE_NAME + " (id, title, description, project_id, outcome, date_due) ";
-        insertCommand += "VALUES (1, '" + taskBean.getTitle() + "','" + taskBean.getDescription() + "'," + ((taskBean.getProject() == null) ? "NULL" : (String) taskBean.getProject()) + ", '" + taskBean.getOutcome() + "',";
+        String insertCommand = "INSERT INTO " + TASKS_TABLE_NAME + " (uuid, title, description, project_id, outcome, date_due) ";
+        insertCommand += "VALUES ('" + taskBean.getUuid() + "','" + taskBean.getTitle() + "','" + taskBean.getDescription() + "','" + ((taskBean.getProject() == null) ? "NULL" : taskBean.getProject().getUuid()) + "','" + taskBean.getOutcome() + "',";
         try {
             insertCommand += "'" + taskBean.getDateDue() + "'";
         } catch (ToDoDateDueNullException e) {
@@ -60,8 +68,8 @@ public class DatabaseToDoInserter {
     }
 
     private String getProjectInsertCommand(Project projectBean) {
-        String insertCommand = "INSERT INTO " + PROJECTS_TABLE_NAME + " (title, description, outcome, date_due) ";
-        insertCommand += "VALUES ('" + projectBean.getTitle() + "','" + projectBean.getDescription() + "','" + projectBean.getOutcome() + "',";
+        String insertCommand = "INSERT INTO " + PROJECTS_TABLE_NAME + " (uuid, title, description, outcome, date_due) ";
+        insertCommand += "VALUES ('" + projectBean.getUuid() + "','" + projectBean.getTitle() + "','" + projectBean.getDescription() + "','" + projectBean.getOutcome() + "',";
         try {
             insertCommand += "'" + projectBean.getDateDue() + "'";
         } catch (ToDoDateDueNullException e) {

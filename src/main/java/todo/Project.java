@@ -12,6 +12,7 @@ public class Project extends ToDo {
     ArrayList<Task> tasks;
     
     Project(){
+        super();
         tasks = new ArrayList<>();
     }
     

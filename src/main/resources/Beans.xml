@@ -18,16 +18,19 @@
     </bean>
     
     <bean id = "test_task01" class = "todo.Task">
+        <property name = "uuid" value = "test_task01"/>
         <property name = "title" value = "test task01 title"/>
         <property name = "description" value = "test task01 description"/>
     </bean>
     
     <bean id = "test_task02" class = "todo.Task">
+        <property name = "uuid" value = "test_task02"/>
         <property name = "title" value = "test task02 title"/>
         <property name = "description" value = "test task02 description"/>
     </bean>
             
     <bean id = "test_project01" class = "todo.Project">
+        <property name = "uuid" value = "test_project01"/>
         <property name = "title" value = "test project01 title"/>
         <property name = "description" value = "test project01 description"/>
     </bean>
