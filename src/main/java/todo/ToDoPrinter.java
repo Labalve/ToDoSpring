@@ -50,7 +50,7 @@ public class ToDoPrinter {
         String toDoDateDue = "";
         try {
             toDoDateDue += " date_due=\"" + toDoBeingChecked.getDateDue() + "\"";
-        } catch (ToDoDueDateNullException e) {
+        } catch (ToDoDateDueNullException e) {
             ;
         }
         return toDoDateDue;

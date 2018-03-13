@@ -26,9 +26,9 @@ abstract class ToDo implements ToDoPrintable {
         return description;
     }
 
-    public Date getDateDue() throws ToDoDueDateNullException {
+    public Date getDateDue() throws ToDoDateDueNullException {
         if (dateDue == null) {
-            throw new ToDoDueDateNullException(title + " dateDue is null");
+            throw new ToDoDateDueNullException(title + " dateDue is null");
         } else {
             return dateDue;
         }

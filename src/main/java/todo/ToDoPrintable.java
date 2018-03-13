@@ -9,6 +9,6 @@ import java.util.Date;
 interface ToDoPrintable {
     String getTitle();
     String getDescription();
-    Date getDateDue() throws ToDoDueDateNullException;
+    Date getDateDue() throws ToDoDateDueNullException;
     Outcome getOutcome();
 }

@@ -15,7 +15,7 @@ public class ToDoFactory {
     private ToDoFactory() {
         this.context = new ClassPathXmlApplicationContext("Beans.xml");
     }
-    
+
     private static ToDoFactory getInstance() {
         if (ToDoFactory.instance == null) {
             ToDoFactory.instance = new ToDoFactory();

@@ -14,7 +14,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  *
  * @author Labalve
  */
-public class DatabaseConnectionTest {
+public class DatabaseConnectorTest {
     
     @Test
     public void testDatabaseConnectorCreation()

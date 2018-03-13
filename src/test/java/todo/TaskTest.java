@@ -18,7 +18,7 @@ import org.junit.Assert;
 public class TaskTest {
 
     @Test
-    public void testTaskDateSetting() throws WrongToDoTypeException, ToDoDueDateNullException {
+    public void testTaskDateSetting() throws WrongToDoTypeException, ToDoDateDueNullException {
         Task taskBean = new Task();
         taskBean.setDateDue(setDateForTheTest());
         Assert.assertEquals(setDateForTheTest().getTime(), taskBean.getDateDue().getTime());
@@ -32,8 +32,8 @@ public class TaskTest {
         return cal.getTime();
     }
     
-    @Test(expected = ToDoDueDateNullException.class)
-    public void testToDoDueDateNullException() throws ToDoDueDateNullException, WrongToDoTypeException {
+    @Test(expected = ToDoDateDueNullException.class)
+    public void testToDoDateDueNullException() throws ToDoDateDueNullException, WrongToDoTypeException {
         Task taskBean = new Task();
         taskBean.getDateDue();
     }

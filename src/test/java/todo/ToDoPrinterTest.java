@@ -80,7 +80,7 @@ public class ToDoPrinterTest {
         String taskDateDue = "";
         try {
             taskDateDue += " date_due=\"" + toDo.getDateDue() + "\"";
-        } catch (ToDoDueDateNullException e) {
+        } catch (ToDoDateDueNullException e) {
             ;
         }
         return taskDateDue;

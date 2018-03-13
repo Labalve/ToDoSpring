@@ -8,6 +8,7 @@ public class DatabaseServer {
 
     private String dbms;
     private String serverName;
+    private String databaseName;
     private String portNumber;
     /**
      * @return the dbms
@@ -49,6 +50,14 @@ public class DatabaseServer {
      */
     public void setPortNumber(String portNumber) {
         this.portNumber = portNumber;
+    }
+
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
+    
+    public String getDatabaseName() {
+        return databaseName;
     }
 
 }

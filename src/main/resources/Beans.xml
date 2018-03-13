@@ -14,6 +14,7 @@
         <property name = "dbms" value = "mysql"/>
         <property name = "serverName" value = "localhost"/>
         <property name = "portNumber" value = "3306"/>
+        <property name = "databaseName" value = "mock_database01"/>
     </bean>
     
     <bean id = "test_task01" class = "todo.Task">

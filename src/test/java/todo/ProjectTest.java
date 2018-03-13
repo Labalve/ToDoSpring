@@ -20,7 +20,7 @@ import org.junit.Assert;
 public class ProjectTest {
 
     @Test
-    public void testProjectDateSetting() throws WrongToDoTypeException, ToDoDueDateNullException  {
+    public void testProjectDateSetting() throws WrongToDoTypeException, ToDoDateDueNullException  {
         Project projectBean = new Project();
         projectBean.setDateDue(setDateForTheTest());
         Assert.assertEquals(setDateForTheTest().getTime(), projectBean.getDateDue().getTime());
@@ -47,8 +47,8 @@ public class ProjectTest {
         Assert.assertEquals(tasks, projectBean.getTaskList());
     }
     
-    @Test(expected = ToDoDueDateNullException.class)
-    public void testToDoDueDateNullException() throws ToDoDueDateNullException, WrongToDoTypeException {
+    @Test(expected = ToDoDateDueNullException.class)
+    public void testToDoDateDueNullException() throws ToDoDateDueNullException, WrongToDoTypeException {
         Project projectBean = new Project();
         projectBean.getDateDue();
     }

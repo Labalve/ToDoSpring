@@ -4,9 +4,9 @@ package todo;
  *
  * @author Labalve
  */
-public class ToDoDueDateNullException extends Exception {
+public class ToDoDateDueNullException extends Exception {
     private String errorMessage;
-    ToDoDueDateNullException(String errorMessage) {
+    ToDoDateDueNullException(String errorMessage) {
         this.errorMessage = errorMessage;
     }
     @Override

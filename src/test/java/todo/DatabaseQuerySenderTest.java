@@ -19,6 +19,7 @@ public class DatabaseQuerySenderTest {
         createTestTable();
         insertIntoTestTable();
         String queryResult = getQueryDatabaseResult();
+        dropTestDatabase();
         Assert.assertEquals(getExcpectedQueryResult(), queryResult);
     }
 
@@ -80,6 +81,16 @@ public class DatabaseQuerySenderTest {
         return resultPrintable;
     }
 
+    private void dropTestDatabase() throws SQLException {
+        DatabaseConnector databaseConnector = new DatabaseConnector();
+        Connection databaseConnection = databaseConnector.getDatabaseConnection();
+        PreparedStatement preparedStatement;
+        preparedStatement = databaseConnection.prepareStatement(getDropDatabaseCommand());
+        preparedStatement.execute();
+        preparedStatement.close();
+        databaseConnection.close();
+    }
+
     private String getDropDatabaseCommand() {
         String dropCommand = "DROP DATABASE IF EXISTS mock_database01;";
         return dropCommand;
@@ -91,7 +102,7 @@ public class DatabaseQuerySenderTest {
     }
 
     private String getCreateTableCommand() {
-        String createCommand =  "CREATE TABLE mock_table01 ( id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
+        String createCommand = "CREATE TABLE mock_table01 ( id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
                 + "title VARCHAR(30) NOT NULL,"
                 + "description VARCHAR(30) NOT NULL);";
         return createCommand;
