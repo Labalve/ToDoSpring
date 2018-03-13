@@ -23,18 +23,18 @@ public class DatabaseCreator {
     }
     
     private void implCreateDatabase() throws SQLException {
-        sendDropDatabaseQuery();
-        sendCreateDatabaseQuery();
+        sendDropDatabaseCommand();
+        sendCreateDatabaseCommand();
         preparedStatement.close();
         databaseConnection.close();
     }
     
-    private void sendCreateDatabaseQuery() throws SQLException {
+    private void sendCreateDatabaseCommand() throws SQLException {
         preparedStatement = databaseConnection.prepareStatement(getDatabaseCreatingQuery());
         preparedStatement.execute();
     }
     
-    private void sendDropDatabaseQuery() throws SQLException {
+    private void sendDropDatabaseCommand() throws SQLException {
         preparedStatement = databaseConnection.prepareStatement(getDatabaseDroppingQuery());
         preparedStatement.execute();
     }

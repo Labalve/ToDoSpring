@@ -21,7 +21,7 @@ public class TaskTest {
     public void testTaskDateSetting() throws WrongToDoTypeException, ToDoDueDateNullException {
         Task taskBean = new Task();
         taskBean.setDateDue(setDateForTheTest());
-        Assert.assertEquals(setDateForTheTest(), taskBean.getDateDue());
+        Assert.assertEquals(setDateForTheTest().getTime(), taskBean.getDateDue().getTime());
     }
 
     private Date setDateForTheTest() {
