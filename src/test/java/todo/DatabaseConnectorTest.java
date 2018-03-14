@@ -1,10 +1,7 @@
 package todo;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
-import junit.framework.Assert;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;

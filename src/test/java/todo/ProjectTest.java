@@ -23,12 +23,12 @@ import static org.junit.Assert.fail;
 @ContextConfiguration(classes = {AppConfig.class})
 public class ProjectTest {
 
-    @Test
-    public void testProjectDateSetting() throws WrongToDoTypeException, ToDoDateDueNullException  {
-        Project projectBean = new Project();
-        projectBean.setDateDue(setDateForTheTest());
-        Assert.assertEquals(setDateForTheTest().getTime(), projectBean.getDateDue().getTime());
-    }
+//    @Test
+//    public void testProjectDateSetting() throws WrongToDoTypeException, ToDoDateDueNullException  {
+//        Project projectBean = new Project();
+//        projectBean.setDateDue(setDateForTheTest());
+//        Assert.assertEquals(setDateForTheTest().getTime(), projectBean.getDateDue().getTime());
+//    }
     
     private Date setDateForTheTest(){
         Calendar cal = Calendar.getInstance();

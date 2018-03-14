@@ -20,7 +20,7 @@ public class DatabaseConnector {
     private DatabaseServer databaseServer;
     private Properties connectionProperties;
 
-    public DatabaseConnector(){
+    public DatabaseConnector() {
         AbstractApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
         databaseUser = (DatabaseUser) context.getBean(defaultDatabaseUserId);
         databaseServer = (DatabaseServer) context.getBean(defaultDatabaseServerId);
