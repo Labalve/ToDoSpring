@@ -25,36 +25,24 @@ public class ToDoPrinterTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 
-    @Before
-    public void setUpStreams() {
-        System.setOut(new PrintStream(outContent));
-        System.setErr(new PrintStream(errContent));
-    }
-
-    @After
-    public void restoreStreams() {
-        System.setOut(System.out);
-        System.setErr(System.err);
-    }
-
     @Test
         public void testPrintingProjectWithoutTaskListXMLFormat() throws WrongToDoTypeException {
         ToDoPrinter toDoPrinter = new ToDoPrinter();
-        Project projectBean = (Project) ToDoFactory.getBean("Project", "test_project01");
-        toDoPrinter.printToDo(projectBean);
-        Assert.assertEquals(getXMLProjectStructure(projectBean), outContent.toString());
+        Project projectBean = (Project) ToDoTestingFactory.getContextBean("Project", "test_project01");
+        String response = toDoPrinter.printToDo(projectBean);
+        Assert.assertEquals(getXMLProjectStructure(projectBean), response);
     }
     
     @Test
     public void testPrintingProjectWithTaskListXMLFormat() throws WrongToDoTypeException {
         ToDoPrinter toDoPrinter = new ToDoPrinter();
-        Task taskBean01 = (Task) ToDoFactory.getBean("Task", "test_task01");
-        Task taskBean02 = (Task) ToDoFactory.getBean("Task", "test_task02");
-        Project projectBean = (Project) ToDoFactory.getBean("Project", "test_project01");
+        Task taskBean01 = (Task) ToDoTestingFactory.getContextBean("Task", "test_task01");
+        Task taskBean02 = (Task) ToDoTestingFactory.getContextBean("Task", "test_task02");
+        Project projectBean = (Project) ToDoTestingFactory.getContextBean("Project", "test_project01");
         taskBean01.setProject(projectBean);
         projectBean.attachTask(taskBean02);
-        toDoPrinter.printToDo(projectBean);
-        Assert.assertEquals(getExpectedTaskListPrint(projectBean), outContent.toString());
+        String response = toDoPrinter.printToDo(projectBean);
+        Assert.assertEquals(getExpectedTaskListPrint(projectBean), response);
     }
     
     private String getExpectedTaskListPrint(Project projectBean) {

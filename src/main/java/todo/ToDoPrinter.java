@@ -10,18 +10,23 @@ public class ToDoPrinter {
 
     private ToDoPrintable toDo;
 
-    public void printToDo(ToDoPrintable toDo) {
+    public String printToDo(ToDoPrintable toDo) {
         this.toDo = toDo;
-        printXMLToDo();
+        try {
+            return printXMLToDo();
+        } catch (WrongToDoTypeException e){
+            return e.getMessage();
+        }
     }
 
-    private void printXMLToDo() {
+    private String printXMLToDo() throws WrongToDoTypeException {
         if (toDo instanceof Task) {
-            System.out.print(getXMLTaskStructure());
+            return getXMLTaskStructure();
         }
-        if (toDo instanceof Project) {
-            System.out.print(getXMLProjectStructure());
+        else if (toDo instanceof Project) {
+            return getXMLProjectStructure();
         }
+        throw new WrongToDoTypeException("Wrong type provided.");
     }
 
     private String getXMLTaskStructure() {

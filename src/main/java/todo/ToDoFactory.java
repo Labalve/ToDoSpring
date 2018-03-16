@@ -44,5 +44,27 @@ public class ToDoFactory {
         Project bean = (Project) context.getBean(guid);
         return bean;
     }
+    
+    public static ToDo getContextBean(String type, String guid) throws WrongToDoTypeException {
+        ToDoFactory toDoFactory = ToDoFactory.getInstance();
+        switch (type) {
+            case "Task":
+                return toDoFactory.getContextTaskBean(guid);
+            case "Project":
+                return toDoFactory.getContextProjectBean(guid);
+            default:
+                throw new WrongToDoTypeException(type + " is not a ToDo type");
+        }
+    }
+
+    public Task getContextTaskBean(String guid) {
+        Task bean = (Task) context.getBean(guid);
+        return bean;
+    }
+
+    public Project getContextProjectBean(String guid) {
+        Project bean = (Project) context.getBean(guid);
+        return bean;
+    }
 
 }

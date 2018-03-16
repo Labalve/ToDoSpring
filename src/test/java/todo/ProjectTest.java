@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 import org.junit.Assert;
 import static org.junit.Assert.fail;
+import org.junit.Ignore;
 
 /**
  *
@@ -23,12 +24,13 @@ import static org.junit.Assert.fail;
 @ContextConfiguration(classes = {AppConfig.class})
 public class ProjectTest {
 
-//    @Test
-//    public void testProjectDateSetting() throws WrongToDoTypeException, ToDoDateDueNullException  {
-//        Project projectBean = new Project();
-//        projectBean.setDateDue(setDateForTheTest());
-//        Assert.assertEquals(setDateForTheTest().getTime(), projectBean.getDateDue().getTime());
-//    }
+    @Test
+    @Ignore
+    public void testProjectDateSetting() throws WrongToDoTypeException, ToDoDateDueNullException  {
+        Project projectBean = new Project();
+        projectBean.setDateDue(setDateForTheTest());
+        Assert.assertEquals(setDateForTheTest().getTime(), projectBean.getDateDue().getTime());
+    }
     
     private Date setDateForTheTest(){
         Calendar cal = Calendar.getInstance();
@@ -62,7 +64,7 @@ public class ProjectTest {
         dropTestDatabase();
         createTestDatabase();
         createTestTables();
-        Project projectBean = (Project) ToDoFactory.getBean("Project", "test_project01");
+        Project projectBean = (Project) ToDoTestingFactory.getContextBean ("Project", "test_project01");
         try {
             projectBean.testSave();
         } catch (SQLException e) {
