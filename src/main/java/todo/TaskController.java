@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class TaskController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{taskId}")
-    public String getTask(@PathVariable String taskId) throws SQLException {
+    public String get(@PathVariable String id) throws SQLException {
         Task task;
         try {
-            task = (Task) ToDoFactory.getBean("Task", taskId);
+            task = (Task) ToDoFactory.getBean("Task", id);
         } catch (SQLException | InvalidToDoIdException | WrongToDoTypeException e) {
             return e.getMessage();
         }

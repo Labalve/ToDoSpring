@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProjectController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{projectId}")
-    public String getProject(@PathVariable String projectId) throws SQLException {
+    public String get(@PathVariable String id) throws SQLException {
         Project project;
         try {
-            project = (Project) ToDoFactory.getBean("Project", projectId);
+            project = (Project) ToDoFactory.getBean("Project", id);
         } catch (SQLException | InvalidToDoIdException | WrongToDoTypeException e) {
             return e.getMessage();
         }
