@@ -1,5 +1,4 @@
 package todo;
-
 /**
  *
  * @author Labalve
@@ -14,25 +13,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/task")
-public class TaskController {
+@RequestMapping("/project")
+public class ProjectController {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{taskId}")
-    public String getTask(@PathVariable String taskId) throws SQLException {
-        Task task;
+    @RequestMapping(method = RequestMethod.GET, value = "/{projectId}")
+    public String getProject(@PathVariable String projectId) throws SQLException {
+        Project project;
         try {
-            task = (Task) ToDoFactory.getBean("Task", taskId);
+            project = (Project) ToDoFactory.getBean("Project", projectId);
         } catch (SQLException | InvalidToDoIdException | WrongToDoTypeException e) {
             return e.getMessage();
         }
         ToDoPrinter toDoPrinter = new ToDoPrinter();
-        return toDoPrinter.printToDo(task);
+        return toDoPrinter.printToDo(project);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/")
-    public ResponseEntity<Task> add(@RequestBody Task task) throws SQLException, WrongToDoTypeException {
-        task.setProject(task.getProjectUuid());
-        task.save();
-        return new ResponseEntity<>(task, HttpStatus.OK);
+    public ResponseEntity<Project> add(@RequestBody Project project) throws SQLException, WrongToDoTypeException {
+        project.save();
+        return new ResponseEntity<>(project, HttpStatus.OK);
     }
 }

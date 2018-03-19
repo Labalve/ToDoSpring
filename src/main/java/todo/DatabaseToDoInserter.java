@@ -65,7 +65,6 @@ public class DatabaseToDoInserter {
             insertCommand += "NULL";
         }
         insertCommand += ");";
-        System.out.println(insertCommand);
         return insertCommand;
     }
 
