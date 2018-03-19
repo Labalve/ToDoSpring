@@ -59,8 +59,8 @@ public class DatabaseToDoInserter {
         String insertCommand = "INSERT INTO " + TASKS_TABLE_NAME + " (uuid, title, description, project_id, outcome, date_due) ";
         insertCommand += "VALUES ('" + taskBean.getUuid() + "','" + taskBean.getTitle() + "','" + taskBean.getDescription() + "'," + ((taskBean.getProjectUuid() == null) ? "NULL" : "'" + taskBean.getProjectUuid() + "'") + ",'" + taskBean.getOutcome() + "',";
         try {
-            java.sql.Date sqlDate = new java.sql.Date(taskBean.getDateDue().getTime());
-            insertCommand += "'" + sqlDate + "'";
+            java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(taskBean.getDateDue().getTime());
+            insertCommand += "'" + sqlTimestamp + "'";
         } catch (ToDoDateDueNullException e) {
             insertCommand += "NULL";
         }
@@ -72,7 +72,8 @@ public class DatabaseToDoInserter {
         String insertCommand = "INSERT INTO " + PROJECTS_TABLE_NAME + " (uuid, title, description, outcome, date_due) ";
         insertCommand += "VALUES ('" + projectBean.getUuid() + "','" + projectBean.getTitle() + "','" + projectBean.getDescription() + "','" + projectBean.getOutcome() + "',";
         try {
-            insertCommand += "'" + projectBean.getDateDue() + "'";
+            java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(projectBean.getDateDue().getTime());
+            insertCommand += "'" + sqlTimestamp + "'";
         } catch (ToDoDateDueNullException e) {
             insertCommand += "NULL";
         }
