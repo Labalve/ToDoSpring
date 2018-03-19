@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/project")
 public class ProjectController {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public String get(@PathVariable String id) throws SQLException {
+    @RequestMapping(method = RequestMethod.GET, value = "/")
+    public String get(@RequestParam("id") String id) {
         Project project;
         try {
             project = (Project) ToDoFactory.getBean("Project", id);
@@ -34,8 +35,8 @@ public class ProjectController {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
     
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}/tasks")
-    public String getAttachedTasks(@PathVariable String id) throws SQLException {
+    @RequestMapping(method = RequestMethod.GET, value = "/getTaskList")
+    public String getAttachedTasks(@RequestParam("id") String id) {
         Project project;
         try {
             project = (Project) ToDoFactory.getBean("Project", id);
