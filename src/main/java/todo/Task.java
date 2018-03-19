@@ -18,7 +18,11 @@ public class Task extends ToDo {
     }
     
     void setProject(String uuid) throws WrongToDoTypeException, SQLException{
-        setProject((Project) ToDoFactory.getBean("Project", uuid));
+        try {
+            setProject((Project) ToDoFactory.getBean("Project", uuid));
+        } catch (InvalidToDoIdException e) {
+            System.out.println(e.getMessage());
+        }
     }
     
     Project getProject() {

@@ -21,7 +21,7 @@ public class ToDoFactory {
         return ToDoFactory.instance;
     }
     
-    public static ToDo getBean(String type, String uuid) throws WrongToDoTypeException, SQLException {
+    public static ToDo getBean(String type, String uuid) throws WrongToDoTypeException, SQLException, InvalidToDoIdException {
         ToDoFactory toDoFactory = ToDoFactory.getInstance();
         switch (type) {
             case "Task":
@@ -33,13 +33,13 @@ public class ToDoFactory {
         }
     }
 
-    public Task getTaskBean(String uuid) throws SQLException {
+    public Task getTaskBean(String uuid) throws SQLException, InvalidToDoIdException {
         DatabaseToDoSelector databaseToDoSelector = new DatabaseToDoSelector();
         Task bean = (Task) databaseToDoSelector.getTask(uuid);
         return bean;
     }
 
-    public Project getProjectBean(String uuid) throws SQLException {
+    public Project getProjectBean(String uuid) throws SQLException, InvalidToDoIdException {
         DatabaseToDoSelector databaseToDoSelector = new DatabaseToDoSelector();
         Project bean = (Project) databaseToDoSelector.getProject(uuid);
         return bean;

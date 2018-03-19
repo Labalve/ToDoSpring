@@ -10,7 +10,7 @@ import java.sql.ResultSet;
  * @author Labalve
  */
 public class DatabaseToDoSelector {
-
+    
     private static final String TASKS_TABLE_NAME = "tasks";
     private static final String PROJECTS_TABLE_NAME = "projects";
 
@@ -33,7 +33,7 @@ public class DatabaseToDoSelector {
         databaseConnection = databaseConnector.getDatabaseConnection();
     }
 
-    public Project getProject(String uuid) throws SQLException {
+    public Project getProject(String uuid) throws SQLException, InvalidToDoIdException {
         this.toDoClass = "Project";
         this.uuid = uuid;
         query = "SELECT * FROM " + PROJECTS_TABLE_NAME + " WHERE uuid = ?";
@@ -52,7 +52,7 @@ public class DatabaseToDoSelector {
         return projectBean;
     }
 
-    public Task getTask(String uuid) throws SQLException {
+    public Task getTask(String uuid) throws SQLException, InvalidToDoIdException {
         this.toDoClass = "Task";
         this.uuid = uuid;
         query = "SELECT * FROM " + TASKS_TABLE_NAME + " WHERE uuid = ?";
@@ -61,7 +61,7 @@ public class DatabaseToDoSelector {
         return task;
     }
 
-    private Task ResultSetToTask(ResultSet resultSet) throws SQLException {
+    private Task ResultSetToTask(ResultSet resultSet) throws SQLException, InvalidToDoIdException {
         Task taskBean = new Task();
         if (resultSet.next()) {
             taskBean.setUuid(resultSet.getString("uuid"));
@@ -78,6 +78,7 @@ public class DatabaseToDoSelector {
                 e.getMessage();
             }
         }
+        else throw new InvalidToDoIdException(toDoClass, uuid);
         return taskBean;
     }
 
@@ -85,7 +86,7 @@ public class DatabaseToDoSelector {
 //        insertCommand = getProjectInsertCommand(taskBean.getProject());
 //        handleInsert();
 //    }
-    private ToDo handleSingleSelect() throws SQLException {
+    private ToDo handleSingleSelect() throws SQLException, InvalidToDoIdException {
         preparedStatement = databaseConnection.prepareStatement("USE " + databaseName + ";");
         preparedStatement.execute();
         preparedStatement = databaseConnection.prepareStatement(query);
