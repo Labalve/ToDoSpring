@@ -4,13 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 /**
  *
  * @author Labalve
  */
 public class DatabaseToDoSelector {
-   
+
     private static final String TASKS_TABLE_NAME = "tasks";
     private static final String PROJECTS_TABLE_NAME = "projects";
 
@@ -38,8 +39,24 @@ public class DatabaseToDoSelector {
         this.uuid = uuid;
         query = "SELECT * FROM " + PROJECTS_TABLE_NAME + " WHERE uuid = ?";
         Project project = (Project) handleSingleSelect();
+        ArrayList<Task> attachedTasks = getAttachedTasks();
+        project.attachTasks(attachedTasks);
         databaseConnection.close();
         return project;
+    }
+
+    private ArrayList<Task> getAttachedTasks() throws SQLException, InvalidToDoIdException {
+        query = "SELECT * FROM " + TASKS_TABLE_NAME + " WHERE project_id = ?";
+        preparedStatement = databaseConnection.prepareStatement("USE " + databaseName + ";");
+        preparedStatement.execute();
+        preparedStatement = databaseConnection.prepareStatement(query);
+        preparedStatement.setString(1, uuid);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        ArrayList<Task> attachedTasks = new ArrayList<>();
+        while (resultSet.next()) {
+            attachedTasks.add(ResultSetToTask(resultSet));
+        }
+        return attachedTasks;
     }
 
     private Project ResultSetToProject(ResultSet resultSet) throws SQLException {
@@ -51,8 +68,6 @@ public class DatabaseToDoSelector {
         projectBean.setOutcome(Outcome.valueOf(resultSet.getString("outcome")));
         return projectBean;
     }
-    
-    
 
     public Task getTask(String uuid) throws SQLException, InvalidToDoIdException {
         this.toDoClass = "Task";
@@ -65,23 +80,29 @@ public class DatabaseToDoSelector {
 
     private Task ResultSetToTask(ResultSet resultSet) throws SQLException, InvalidToDoIdException {
         Task taskBean = new Task();
-        if (resultSet.next()) {
-            taskBean.setUuid(resultSet.getString("uuid"));
-            taskBean.setDateDue(resultSet.getDate("date_due"));
-            taskBean.setTitle(resultSet.getString("title"));
-            taskBean.setDescription(resultSet.getString("description"));
-//taskBean.setOutcome(resultSet.getString("outcome"));
-            try {
-                String project_id = resultSet.getString("project_id");
-                if(!resultSet.wasNull()){
-                    taskBean.setProject(project_id);
-                }
-            } catch (WrongToDoTypeException e) {
-                e.getMessage();
+        taskBean.setUuid(resultSet.getString("uuid"));
+        taskBean.setDateDue(resultSet.getDate("date_due"));
+        taskBean.setTitle(resultSet.getString("title"));
+        taskBean.setDescription(resultSet.getString("description"));
+        taskBean.setOutcome(Outcome.valueOf(resultSet.getString("outcome")));
+        try {
+            String project_id = resultSet.getString("project_id");
+            if (!resultSet.wasNull()) {
+                taskBean.setProject(project_id);
             }
+        } catch (WrongToDoTypeException e) {
+            e.getMessage();
         }
-        else throw new InvalidToDoIdException(toDoClass, uuid);
         return taskBean;
+    }
+
+    private Task SingleResultSetToTask(ResultSet resultSet) throws SQLException, InvalidToDoIdException {
+        if (resultSet.first()) {
+            Task taskBean = ResultSetToTask(resultSet);
+            return taskBean;
+        } else {
+            throw new InvalidToDoIdException(toDoClass, uuid);
+        }
     }
 
 //    private void saveParentProject(Task taskBean) throws SQLException {
@@ -94,10 +115,11 @@ public class DatabaseToDoSelector {
         preparedStatement = databaseConnection.prepareStatement(query);
         preparedStatement.setString(1, uuid);
         ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
         if (toDoClass.equals("Task")) {
-            Task toDo = ResultSetToTask(resultSet);
+            Task toDo = SingleResultSetToTask(resultSet);
             preparedStatement.close();
-            return toDo; 
+            return toDo;
         } else {
             Project toDo = ResultSetToProject(resultSet);
             preparedStatement.close();

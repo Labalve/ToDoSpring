@@ -14,7 +14,7 @@ public class ToDoPrinter {
         this.toDo = toDo;
         try {
             return printXMLToDo();
-        } catch (WrongToDoTypeException e){
+        } catch (WrongToDoTypeException e) {
             return e.getMessage();
         }
     }
@@ -22,8 +22,7 @@ public class ToDoPrinter {
     private String printXMLToDo() throws WrongToDoTypeException {
         if (toDo instanceof Task) {
             return getXMLTaskStructure();
-        }
-        else if (toDo instanceof Project) {
+        } else if (toDo instanceof Project) {
             return getXMLProjectStructure();
         }
         throw new WrongToDoTypeException("Wrong type provided.");
@@ -63,8 +62,8 @@ public class ToDoPrinter {
 
     private String getXMLProjectsTaskList() {
         ArrayList<Task> projectTasks = ((Project) toDo).getTaskList();
-        String tasks = "";
+        String tasks = "<tasks>";
         tasks = projectTasks.stream().map((task) -> "<task>" + getXMLToDoDetails(task) + "</task>").reduce(tasks, String::concat);
-        return tasks;
+        return tasks + "</tasks>";
     }
 }

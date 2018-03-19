@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/project")
 public class ProjectController {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{projectId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public String get(@PathVariable String id) throws SQLException {
         Project project;
         try {
@@ -33,4 +33,19 @@ public class ProjectController {
         project.save();
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/tasks")
+    public String getAttachedTasks(@PathVariable String id) throws SQLException {
+        Project project;
+        try {
+            project = (Project) ToDoFactory.getBean("Project", id);
+        } catch (SQLException | InvalidToDoIdException | WrongToDoTypeException e) {
+            return e.getMessage();
+        }
+        ToDoPrinter toDoPrinter = new ToDoPrinter();
+        String tasks = "";
+        tasks = project.getTaskList().stream().map((task) -> toDoPrinter.printToDo(task)).reduce(tasks, String::concat);
+        return tasks;
+    }
+    
 }

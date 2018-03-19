@@ -31,6 +31,12 @@ public class Project extends ToDo {
         }
     }
     
+    public void attachTasks(ArrayList<Task> attachedTasks) {
+        attachedTasks.forEach((task) -> {
+            attachTask(task);
+        });
+    }
+    
     public ArrayList<Task> getTaskList(){
         return tasks;
     }
