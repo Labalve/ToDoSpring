@@ -4,6 +4,7 @@ package todo;
  *
  * @author Labalve
  */
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class TaskController {
 
     @RequestMapping("/task")
-    public String test() {
+    public String test() throws SQLException {
         Task task;
         try {
-            task = (Task) ToDoFactory.getBean ("Task", "test_task01234");
+            task = (Task) ToDoFactory.getBean("Task", "test_task01");
         } catch (WrongToDoTypeException e) {
             return e.getMessage();
         }

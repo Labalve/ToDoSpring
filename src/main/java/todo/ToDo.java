@@ -66,6 +66,10 @@ abstract class ToDo implements ToDoPrintable {
     public Outcome getOutcome() {
         return outcome;
     }
+    
+    public void setOutcome(Outcome outcome) {
+        this.outcome = outcome;
+    }
 
     public void setTitle(String title) {
         this.title = title;

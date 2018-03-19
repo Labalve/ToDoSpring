@@ -3,7 +3,9 @@ package todo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import org.junit.After;
 import static org.junit.Assert.fail;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -12,43 +14,44 @@ import org.junit.Test;
  */
 public class DatabaseToDoInserterTest {
 
-    @Test
-    public void testTaskInsertion() throws WrongToDoTypeException, SQLException {
+    @Before
+    public void before() throws SQLException {
         dropTestDatabase();
         createTestDatabase();
         createTestTables();
-        Task taskBean = (Task) ToDoTestingFactory.getContextBean ("Task", "test_task01");
+    }
+    
+    @After
+    public void after() throws SQLException {
+        dropTestDatabase();
+    }
+
+    @Test
+    public void testTaskInsertion() throws WrongToDoTypeException, SQLException {
+        Task taskBean = (Task) ToDoTestingFactory.getContextBean("Task", "test_task01");
         DatabaseToDoInserter databaseInserter = new DatabaseToDoInserter("mock_database01");
         try {
             databaseInserter.saveToDo(taskBean);
         } catch (SQLException e) {
             fail("saving failed with message: " + e.getMessage());
         }
-        dropTestDatabase();
     }
 
     @Test
     public void testProjectInsertion() throws SQLException, WrongToDoTypeException {
-        dropTestDatabase();
-        createTestDatabase();
-        createTestTables();
-        Project projectBean = (Project) ToDoTestingFactory.getContextBean ("Project", "test_project01");
+        Project projectBean = (Project) ToDoTestingFactory.getContextBean("Project", "test_project01");
         DatabaseToDoInserter databaseInserter = new DatabaseToDoInserter("mock_database01");
         try {
             databaseInserter.saveToDo(projectBean);
         } catch (SQLException e) {
             fail("saving failed with message: " + e.getMessage());
         }
-        dropTestDatabase();
     }
 
     @Test
     public void testTaskWithProjectInsertion() throws WrongToDoTypeException, SQLException {
-        dropTestDatabase();
-        createTestDatabase();
-        createTestTables();
-        Task taskBean = (Task) ToDoTestingFactory.getContextBean ("Task", "test_task01");
-        Project projectBean = (Project) ToDoTestingFactory.getContextBean ("Project", "test_project01");
+        Task taskBean = (Task) ToDoTestingFactory.getContextBean("Task", "test_task01");
+        Project projectBean = (Project) ToDoTestingFactory.getContextBean("Project", "test_project01");
         taskBean.setProject(projectBean);
         DatabaseToDoInserter databaseInserter = new DatabaseToDoInserter("mock_database01");
         try {
@@ -56,9 +59,8 @@ public class DatabaseToDoInserterTest {
         } catch (SQLException e) {
             fail("saving failed with message: " + e.getMessage());
         }
-        dropTestDatabase();
     }
-    
+
     private void createTestDatabase() throws SQLException {
         DatabaseConnector databaseConnector = new DatabaseConnector();
         Connection databaseConnection = databaseConnector.getDatabaseConnection();

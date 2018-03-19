@@ -1,7 +1,6 @@
 package todo;
 
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import java.sql.SQLException;
 
 /**
  *
@@ -10,10 +9,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class ToDoFactory {
 
     private static ToDoFactory instance;
-    private AbstractApplicationContext context;
 
     private ToDoFactory() {
-        this.context = new ClassPathXmlApplicationContext("Beans.xml");
+        
     }
 
     private static ToDoFactory getInstance() {
@@ -22,49 +20,28 @@ public class ToDoFactory {
         }
         return ToDoFactory.instance;
     }
-
-    public static ToDo getBean(String type, String guid) throws WrongToDoTypeException {
-        ToDoFactory toDoFactory = ToDoFactory.getInstance();
-        switch (type) {
-            case "Task":
-                return toDoFactory.getTaskBean(guid);
-            case "Project":
-                return toDoFactory.getProjectBean(guid);
-            default:
-                throw new WrongToDoTypeException(type + " is not a ToDo type");
-        }
-    }
-
-    public Task getTaskBean(String guid) {
-        Task bean = (Task) context.getBean(guid);
-        return bean;
-    }
-
-    public Project getProjectBean(String guid) {
-        Project bean = (Project) context.getBean(guid);
-        return bean;
-    }
     
-    public static ToDo getContextBean(String type, String guid) throws WrongToDoTypeException {
+    public static ToDo getBean(String type, String uuid) throws WrongToDoTypeException, SQLException {
         ToDoFactory toDoFactory = ToDoFactory.getInstance();
         switch (type) {
             case "Task":
-                return toDoFactory.getContextTaskBean(guid);
+                return toDoFactory.getTaskBean(uuid);
             case "Project":
-                return toDoFactory.getContextProjectBean(guid);
+                return toDoFactory.getProjectBean(uuid);
             default:
                 throw new WrongToDoTypeException(type + " is not a ToDo type");
         }
     }
 
-    public Task getContextTaskBean(String guid) {
-        Task bean = (Task) context.getBean(guid);
+    public Task getTaskBean(String uuid) throws SQLException {
+        DatabaseToDoSelector databaseToDoSelector = new DatabaseToDoSelector();
+        Task bean = (Task) databaseToDoSelector.getTask(uuid);
         return bean;
     }
 
-    public Project getContextProjectBean(String guid) {
-        Project bean = (Project) context.getBean(guid);
+    public Project getProjectBean(String uuid) throws SQLException {
+        DatabaseToDoSelector databaseToDoSelector = new DatabaseToDoSelector();
+        Project bean = (Project) databaseToDoSelector.getProject(uuid);
         return bean;
     }
-
 }
