@@ -10,7 +10,7 @@ import java.sql.ResultSet;
  * @author Labalve
  */
 public class DatabaseToDoSelector {
-    
+   
     private static final String TASKS_TABLE_NAME = "tasks";
     private static final String PROJECTS_TABLE_NAME = "projects";
 
@@ -48,9 +48,11 @@ public class DatabaseToDoSelector {
         projectBean.setDateDue(resultSet.getDate("date_due"));
         projectBean.setTitle(resultSet.getString("title"));
         projectBean.setDescription(resultSet.getString("description"));
-        //projectBean.setOutcome(resultSet.getString("outcome"));
+        projectBean.setOutcome(Outcome.valueOf(resultSet.getString("outcome")));
         return projectBean;
     }
+    
+    
 
     public Task getTask(String uuid) throws SQLException, InvalidToDoIdException {
         this.toDoClass = "Task";

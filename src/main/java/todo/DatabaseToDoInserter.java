@@ -31,7 +31,7 @@ public class DatabaseToDoInserter {
 
     public void saveToDo(ToDo toDoBean) throws SQLException {
         if (toDoBean instanceof Task) {
-            if(null != ((Task) toDoBean).getProject()){
+            if (null != ((Task) toDoBean).getProject()) {
                 saveParentProject((Task) toDoBean);
             }
             insertCommand = getTaskInsertCommand((Task) toDoBean);
@@ -41,7 +41,7 @@ public class DatabaseToDoInserter {
         handleInsert();
         databaseConnection.close();
     }
-    
+
     private void saveParentProject(Task taskBean) throws SQLException {
         insertCommand = getProjectInsertCommand(taskBean.getProject());
         handleInsert();
@@ -57,13 +57,15 @@ public class DatabaseToDoInserter {
 
     private String getTaskInsertCommand(Task taskBean) {
         String insertCommand = "INSERT INTO " + TASKS_TABLE_NAME + " (uuid, title, description, project_id, outcome, date_due) ";
-        insertCommand += "VALUES ('" + taskBean.getUuid() + "','" + taskBean.getTitle() + "','" + taskBean.getDescription() + "','" + ((taskBean.getProject() == null) ? "NULL" : taskBean.getProject().getUuid()) + "','" + taskBean.getOutcome() + "',";
+        insertCommand += "VALUES ('" + taskBean.getUuid() + "','" + taskBean.getTitle() + "','" + taskBean.getDescription() + "'," + ((taskBean.getProjectUuid() == null) ? "NULL" : "'" + taskBean.getProjectUuid() + "'") + ",'" + taskBean.getOutcome() + "',";
         try {
-            insertCommand += "'" + taskBean.getDateDue() + "'";
+            java.sql.Date sqlDate = new java.sql.Date(taskBean.getDateDue().getTime());
+            insertCommand += "'" + sqlDate + "'";
         } catch (ToDoDateDueNullException e) {
             insertCommand += "NULL";
         }
         insertCommand += ");";
+        System.out.println(insertCommand);
         return insertCommand;
     }
 

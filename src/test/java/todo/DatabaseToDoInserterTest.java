@@ -28,7 +28,7 @@ public class DatabaseToDoInserterTest {
 
     @Test
     public void testTaskInsertion() throws WrongToDoTypeException, SQLException {
-        Task taskBean = (Task) ToDoTestingFactory.getContextBean("Task", "test_task01");
+        Task taskBean = (Task) ToDoTestingFactory.getBean("Task", "test_task01");
         DatabaseToDoInserter databaseInserter = new DatabaseToDoInserter("mock_database01");
         try {
             databaseInserter.saveToDo(taskBean);
@@ -39,7 +39,7 @@ public class DatabaseToDoInserterTest {
 
     @Test
     public void testProjectInsertion() throws SQLException, WrongToDoTypeException {
-        Project projectBean = (Project) ToDoTestingFactory.getContextBean("Project", "test_project01");
+        Project projectBean = (Project) ToDoTestingFactory.getBean("Project", "test_project01");
         DatabaseToDoInserter databaseInserter = new DatabaseToDoInserter("mock_database01");
         try {
             databaseInserter.saveToDo(projectBean);
@@ -50,8 +50,8 @@ public class DatabaseToDoInserterTest {
 
     @Test
     public void testTaskWithProjectInsertion() throws WrongToDoTypeException, SQLException {
-        Task taskBean = (Task) ToDoTestingFactory.getContextBean("Task", "test_task01");
-        Project projectBean = (Project) ToDoTestingFactory.getContextBean("Project", "test_project01");
+        Task taskBean = (Task) ToDoTestingFactory.getBean("Task", "test_task01");
+        Project projectBean = (Project) ToDoTestingFactory.getBean("Project", "test_project01");
         taskBean.setProject(projectBean);
         DatabaseToDoInserter databaseInserter = new DatabaseToDoInserter("mock_database01");
         try {

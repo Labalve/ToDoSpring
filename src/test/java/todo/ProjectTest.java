@@ -64,7 +64,7 @@ public class ProjectTest {
         dropTestDatabase();
         createTestDatabase();
         createTestTables();
-        Project projectBean = (Project) ToDoTestingFactory.getContextBean ("Project", "test_project01");
+        Project projectBean = (Project) ToDoTestingFactory.getBean ("Project", "test_project01");
         try {
             projectBean.testSave();
         } catch (SQLException e) {

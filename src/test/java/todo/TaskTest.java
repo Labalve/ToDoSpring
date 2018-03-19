@@ -47,7 +47,7 @@ public class TaskTest {
         dropTestDatabase();
         createTestDatabase();
         createTestTables();
-        Task taskBean = (Task) ToDoTestingFactory.getContextBean("Task", "test_task01");
+        Task taskBean = (Task) ToDoTestingFactory.getBean("Task", "test_task01");
         try {
             taskBean.testSave();
         } catch (SQLException e) {

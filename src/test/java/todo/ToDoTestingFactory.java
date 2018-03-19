@@ -24,7 +24,7 @@ public class ToDoTestingFactory {
         return ToDoTestingFactory.instance;
     }
 
-    public static ToDo getContextBean(String type, String guid) throws WrongToDoTypeException {
+    public static ToDo getBean(String type, String guid) throws WrongToDoTypeException {
         ToDoTestingFactory toDoTestingFactory = ToDoTestingFactory.getInstance();
         switch (type) {
             case "Task":

@@ -9,24 +9,35 @@ import java.sql.SQLException;
 public class Task extends ToDo {
 
     Project project;
-    String project_uuid;
+    String projectUuid;
 
-    void setProject(Project project){
+    void setProject(Project project) {
         this.project = project;
-        this.project_uuid = project.getUuid();
+        this.projectUuid = project.getUuid();
         project.attachTask(this);
     }
-    
-    void setProject(String uuid) throws WrongToDoTypeException, SQLException{
-        try {
-            setProject((Project) ToDoFactory.getBean("Project", uuid));
-        } catch (InvalidToDoIdException e) {
-            System.out.println(e.getMessage());
-        }
+
+    void setProject(String uuid) throws WrongToDoTypeException, SQLException {
+        this.projectUuid = uuid;
     }
-    
+
     Project getProject() {
+        if (project == null) {
+            try {
+                setProject((Project) ToDoFactory.getBean("Project", projectUuid));
+            } catch (SQLException | InvalidToDoIdException | WrongToDoTypeException e) {
+                System.out.println(e.getMessage());
+            }
+        }
         return project;
+    }
+
+    void setProjectUuid(String projectUuid) {
+        this.projectUuid = projectUuid;
+    }
+
+    String getProjectUuid() {
+        return projectUuid;
     }
 
 }

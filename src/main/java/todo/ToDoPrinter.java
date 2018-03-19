@@ -30,31 +30,31 @@ public class ToDoPrinter {
     }
 
     private String getXMLTaskStructure() {
-        String taskStructure = "<task ";
+        String taskStructure = "<task>";
         taskStructure += getXMLToDoDetails(toDo);
-        taskStructure += "/>";
+        taskStructure += "</task>";
         return taskStructure;
     }
 
     private String getXMLProjectStructure() {
-        String projectStructure = "<project ";
-        projectStructure += getXMLToDoDetails(toDo) + ">";
+        String projectStructure = "<project>";
+        projectStructure += getXMLToDoDetails(toDo);
         projectStructure += getXMLProjectsTaskList();
         projectStructure += "</project>";
         return projectStructure;
     }
 
     private String getXMLToDoDetails(ToDoPrintable toDoBeingChecked) {
-        String toDoDetails = "title=\"" + toDoBeingChecked.getTitle() + "\" description=\"" + toDoBeingChecked.getDescription() + "\"";
+        String toDoDetails = "<title>" + toDoBeingChecked.getTitle() + "</title><description>" + toDoBeingChecked.getDescription() + "</description>";
         toDoDetails += getXMLToDoDateDueIfNotNull(toDoBeingChecked);
-        toDoDetails += " outcome=\"" + toDoBeingChecked.getOutcome() + "\"";
+        toDoDetails += "<outcome>" + toDoBeingChecked.getOutcome() + "</outcome>";
         return toDoDetails;
     }
 
     private String getXMLToDoDateDueIfNotNull(ToDoPrintable toDoBeingChecked) {
         String toDoDateDue = "";
         try {
-            toDoDateDue += " date_due=\"" + toDoBeingChecked.getDateDue() + "\"";
+            toDoDateDue += "<date_due>" + toDoBeingChecked.getDateDue() + "</date_due>";
         } catch (ToDoDateDueNullException e) {
             ;
         }
@@ -64,7 +64,7 @@ public class ToDoPrinter {
     private String getXMLProjectsTaskList() {
         ArrayList<Task> projectTasks = ((Project) toDo).getTaskList();
         String tasks = "";
-        tasks = projectTasks.stream().map((task) -> "<task " + getXMLToDoDetails(task) + "/>").reduce(tasks, String::concat);
+        tasks = projectTasks.stream().map((task) -> "<task>" + getXMLToDoDetails(task) + "</task>").reduce(tasks, String::concat);
         return tasks;
     }
 }
