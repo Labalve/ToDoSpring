@@ -2,6 +2,7 @@ package todo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -34,16 +35,16 @@ public class DatabaseToDoInserter {
             if (null != ((Task) toDoBean).getProject()) {
                 saveParentProject((Task) toDoBean);
             }
-            insertCommand = getTaskInsertCommand((Task) toDoBean);
+            insertCommand = getProperTaskCommand((Task) toDoBean);
         } else if (toDoBean instanceof Project) {
-            insertCommand = getProjectInsertCommand((Project) toDoBean);
+            insertCommand = getProperProjectCommand((Project) toDoBean);
         }
         handleInsert();
         databaseConnection.close();
     }
 
     private void saveParentProject(Task taskBean) throws SQLException {
-        insertCommand = getProjectInsertCommand(taskBean.getProject());
+        insertCommand = getProperProjectCommand(taskBean.getProject());
         handleInsert();
     }
 
@@ -55,30 +56,102 @@ public class DatabaseToDoInserter {
         preparedStatement.close();
     }
 
+    private String getProperTaskCommand(Task taskBean) throws SQLException {
+        if (alreadyExists(taskBean)) {
+            return getTaskUpdateCommand(taskBean);
+        } else {
+            return getTaskInsertCommand(taskBean);
+        }
+    }
+    
+    private String getProperProjectCommand(Project projectBean) throws SQLException {
+        if (alreadyExists(projectBean)) {
+            return getProjectUpdateCommand(projectBean);
+        } else {
+            return getProjectInsertCommand(projectBean);
+        }
+    }
+
+    private boolean alreadyExists(ToDo toDo) throws SQLException {
+        if (countOf(toDo, "uuid") > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private int countOf(ToDo toDo, String column) throws SQLException {
+        preparedStatement = databaseConnection.prepareStatement("USE " + databaseName + ";");
+        preparedStatement.execute();
+        if (toDo instanceof Task) {
+            preparedStatement = databaseConnection.prepareStatement("SELECT COUNT(*) FROM " + TASKS_TABLE_NAME + " WHERE UUID = ?;");
+        } else {
+            preparedStatement = databaseConnection.prepareStatement("SELECT COUNT(*) FROM " + PROJECTS_TABLE_NAME + " WHERE UUID = ?;");
+        }
+        preparedStatement.setString(1, toDo.getUuid());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        int count;
+        if (resultSet.next()) {
+            count = resultSet.getInt(1);
+        } else {
+            count = 0;
+        }
+        preparedStatement.close();
+        return count;
+    }
+
     private String getTaskInsertCommand(Task taskBean) {
-        String insertCommand = "INSERT INTO " + TASKS_TABLE_NAME + " (uuid, title, description, project_id, outcome, date_due) ";
-        insertCommand += "VALUES ('" + taskBean.getUuid() + "','" + taskBean.getTitle() + "','" + taskBean.getDescription() + "'," + ((taskBean.getProjectUuid() == null) ? "NULL" : "'" + taskBean.getProjectUuid() + "'") + ",'" + taskBean.getOutcome() + "',";
+        String taskInsertCommand = "INSERT INTO " + TASKS_TABLE_NAME + " (uuid, title, description, project_id, outcome, date_due) ";
+        taskInsertCommand += "VALUES ('" + taskBean.getUuid() + "','" + taskBean.getTitle() + "','" + taskBean.getDescription() + "'," + ((taskBean.getProjectUuid() == null) ? "NULL" : "'" + taskBean.getProjectUuid() + "'") + ",'" + taskBean.getOutcome() + "',";
         try {
             java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(taskBean.getDateDue().getTime());
-            insertCommand += "'" + sqlTimestamp + "'";
+            taskInsertCommand += "'" + sqlTimestamp + "'";
         } catch (ToDoDateDueNullException e) {
-            insertCommand += "NULL";
+            taskInsertCommand += "NULL";
         }
-        insertCommand += ");";
-        return insertCommand;
+        taskInsertCommand += ");";  
+        return taskInsertCommand;
+    }
+
+    private String getTaskUpdateCommand(Task taskBean) {
+        String taskUpdateCommand = "UPDATE " + TASKS_TABLE_NAME + " SET title = \"" + taskBean.getTitle() + "\", description = \"";
+        taskUpdateCommand += taskBean.getDescription() + "\", project_id = " + ((taskBean.getProjectUuid() == null) ? "NULL" : "'" + taskBean.getProjectUuid() + "'");
+        taskUpdateCommand += ", outcome = \"" + taskBean.getOutcome() + "\", ";
+        try {
+            java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(taskBean.getDateDue().getTime());
+            taskUpdateCommand += "date_due = '" + sqlTimestamp + "'";
+        } catch (ToDoDateDueNullException e) {
+            taskUpdateCommand += "NULL";
+        }
+        taskUpdateCommand += " WHERE uuid = '" + taskBean.getUuid() + "';";
+        return taskUpdateCommand;
     }
 
     private String getProjectInsertCommand(Project projectBean) {
-        String insertCommand = "INSERT INTO " + PROJECTS_TABLE_NAME + " (uuid, title, description, outcome, date_due) ";
-        insertCommand += "VALUES ('" + projectBean.getUuid() + "','" + projectBean.getTitle() + "','" + projectBean.getDescription() + "','" + projectBean.getOutcome() + "',";
+        String projectInsertCommand = "INSERT INTO " + PROJECTS_TABLE_NAME + " (uuid, title, description, outcome, date_due) ";
+        projectInsertCommand += "VALUES ('" + projectBean.getUuid() + "','" + projectBean.getTitle() + "','" + projectBean.getDescription() + "','" + projectBean.getOutcome() + "',";
         try {
             java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(projectBean.getDateDue().getTime());
-            insertCommand += "'" + sqlTimestamp + "'";
+            projectInsertCommand += "'" + sqlTimestamp + "'";
         } catch (ToDoDateDueNullException e) {
-            insertCommand += "NULL";
+            projectInsertCommand += "NULL";
         }
-        insertCommand += ");";
-        return insertCommand;
+        projectInsertCommand += ");";
+        return projectInsertCommand;
     }
+    
+        private String getProjectUpdateCommand(Project projectBean) {
+        String projectUpdateCommand = "UPDATE " + PROJECTS_TABLE_NAME + " SET title = \"" + projectBean.getTitle() + "\", description = \"";
+        projectUpdateCommand += projectBean.getDescription() + "\", ";
+        projectUpdateCommand += "outcome = \"" + projectBean.getOutcome() + "\"";
+        try {
+            java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(projectBean.getDateDue().getTime());
+            projectUpdateCommand += ", date_due = '" + sqlTimestamp + "'";
+        } catch (ToDoDateDueNullException e) {
+            
+        }
+        projectUpdateCommand += " WHERE uuid = '" + projectBean.getUuid() + "';";
+        return projectUpdateCommand;
+    }
+
 
 }

@@ -35,19 +35,22 @@ public class TaskController {
         task.save();
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
-    
+
     @RequestMapping(method = RequestMethod.PUT, value = "/attachToProject")
-    public ResponseEntity<Task> attachToProject(@RequestParam("id") String id, @RequestParam("projectId") String projectId){
+    public ResponseEntity attachToProject(@RequestParam("id") String id, @RequestParam("projectId") String projectId) {
         Task task;
-            Project project;
+        Project project;
         try {
             task = (Task) ToDoFactory.getBean("Task", id);
             task.setProject(projectId);
             task.save();
         } catch (SQLException | InvalidToDoIdException | WrongToDoTypeException e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            if (e instanceof SQLException) {
+                return new ResponseEntity("Probably wrong task or project id provided.", HttpStatus.FORBIDDEN);
+            } else {
+                return new ResponseEntity("Attaching failed.", HttpStatus.FORBIDDEN);
+            }
         }
-        return new ResponseEntity<>(task, HttpStatus.OK);
+        return new ResponseEntity("Attached task with id '" + id + "' to project with id '" + projectId + "'", HttpStatus.OK);
     }
 }
