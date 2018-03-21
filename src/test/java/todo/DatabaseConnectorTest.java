@@ -18,8 +18,8 @@ public class DatabaseConnectorTest {
     {
         try {
         AbstractApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
-        DatabaseUser databaseUser = (DatabaseUser) context.getBean("mock_database_user01");
-        DatabaseServer database = (DatabaseServer) context.getBean("mock_database_server01");
+        DatabaseUser databaseUser = (DatabaseUser) context.getBean("database_user01");
+        DatabaseServer database = (DatabaseServer) context.getBean("database_server01");
         }
         catch(Exception e){
             fail(e.getClass().getEnclosingClass() + e.getMessage());

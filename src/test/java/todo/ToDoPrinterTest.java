@@ -76,9 +76,9 @@ public class ToDoPrinterTest {
 
     private String getXMLProjectsTaskList(Project projectBean) {
         ArrayList<Task> projectTasks = projectBean.getTaskList();
-        String tasks = "";
+        String tasks = "<tasks>";
         tasks = projectTasks.stream().map((task) -> "<task>" + getXMLToDoDetails(task) + "</task>").reduce(tasks, String::concat);
-        return tasks;
+        return tasks+"</tasks>";
     }
 
 }

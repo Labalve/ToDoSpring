@@ -13,8 +13,8 @@ import java.sql.SQLException;
  */
 public class DatabaseConnector {
     
-    static private String defaultDatabaseUserId = "mock_database_user01";
-    static private String defaultDatabaseServerId = "mock_database_server01";
+    static private String defaultDatabaseUserId = "database_user01";
+    static private String defaultDatabaseServerId = "database_server01";
     
     private DatabaseUser databaseUser;
     private DatabaseServer databaseServer;
