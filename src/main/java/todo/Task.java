@@ -11,13 +11,13 @@ public class Task extends ToDo {
     Project project;
     String projectUuid;
 
-    void setProject(Project project) {
+    public void setProject(Project project) {
         this.project = project;
         this.projectUuid = project.getUuid();
         project.attachTask(this);
     }
 
-    void setProject(String uuid) throws WrongToDoTypeException, SQLException {
+    public void setProject(String uuid) throws WrongToDoTypeException, SQLException {
         this.projectUuid = uuid;
     }
 
@@ -36,8 +36,13 @@ public class Task extends ToDo {
         this.projectUuid = projectUuid;
     }
 
-    String getProjectUuid() {
+    public String getProjectUuid() {
         return projectUuid;
+    }
+        
+    public static String[] getAllUuids() throws SQLException{
+        DatabaseToDoSelector databaseToDoSelector = new DatabaseToDoSelector();
+        return databaseToDoSelector.getAllTaskUuids();
     }
 
 }

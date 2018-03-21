@@ -1,5 +1,6 @@
 package todo;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -17,6 +18,24 @@ public class ToDoPrinter {
         } catch (WrongToDoTypeException e) {
             return e.getMessage();
         }
+    }
+
+    public String printAllTasks() throws SQLException, WrongToDoTypeException, InvalidToDoIdException {
+        String[] uuids = Task.getAllUuids();
+        String allTasks = "<tasks>";
+        for (String uuid : uuids) {
+            allTasks += printToDo(ToDoFactory.getBean("Task", uuid));
+        }
+        return allTasks;
+    }
+
+    public String printAllProjects() throws SQLException, WrongToDoTypeException, InvalidToDoIdException {
+        String[] uuids = Project.getAllUuids();
+        String allProjects = "<projects>";
+        for (String uuid : uuids) {
+            allProjects += printToDo(ToDoFactory.getBean("Project", uuid));
+        }
+        return allProjects;
     }
 
     private String printXMLToDo() throws WrongToDoTypeException {

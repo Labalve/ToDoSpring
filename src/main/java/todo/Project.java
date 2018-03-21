@@ -1,5 +1,6 @@
 package todo;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -39,6 +40,11 @@ public class Project extends ToDo {
     
     public ArrayList<Task> getTaskList(){
         return tasks;
+    }
+    
+    public static String[] getAllUuids() throws SQLException{
+        DatabaseToDoSelector databaseToDoSelector = new DatabaseToDoSelector();
+        return databaseToDoSelector.getAllProjectUuids();
     }
     
 }

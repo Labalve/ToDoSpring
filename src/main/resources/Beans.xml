@@ -34,5 +34,5 @@
         <property name = "title" value = "test project01 title"/>
         <property name = "description" value = "test project01 description"/>
     </bean>
-    
+
 </beans>

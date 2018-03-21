@@ -15,5 +15,8 @@ CREATE TABLE tasks (
     date_due DATETIME,
     outcome VARCHAR(30),
     FOREIGN KEY (project_id) REFERENCES projects(uuid));
+CREATE TABLE users (
+    key VARCHAR(50) PRIMARY KEY,
+    role VARCHAR(20));
 INSERT INTO tasks (uuid, title, description, project_id, date_due, outcome)
     VALUES ('test_task01', 'Test task01', 'Task01 description', NULL, '20181205 10:00:00 AM', 'NEW');

@@ -4,7 +4,7 @@ package todo;
  *
  * @author Labalve
  */
-class WrongToDoTypeException extends Exception{
+public class WrongToDoTypeException extends Exception{
     private String errorMessage;
     public WrongToDoTypeException(String errorMessage){
         this.errorMessage = errorMessage;

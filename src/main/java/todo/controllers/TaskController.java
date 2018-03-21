@@ -1,43 +1,61 @@
-package todo;
+package todo.controllers;
 
 /**
  *
  * @author Labalve
  */
 import java.sql.SQLException;
+import java.util.List;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import todo.InvalidToDoIdException;
+import todo.Project;
+import todo.Task;
+import todo.ToDoFactory;
+import todo.ToDoPrinter;
+import todo.WrongToDoTypeException;
 
 @RestController
 @RequestMapping("/task")
 public class TaskController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
-    public String get(@RequestParam("id") String id) {
+    public ResponseEntity get(@RequestParam("id") String id, @RequestHeader HttpHeaders headers) {
+        if (!checkIfAuthorized(headers.get("Authorization"))) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
         Task task;
         try {
             task = (Task) ToDoFactory.getBean("Task", id);
         } catch (SQLException | InvalidToDoIdException | WrongToDoTypeException e) {
-            return e.getMessage();
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
         }
         ToDoPrinter toDoPrinter = new ToDoPrinter();
-        return toDoPrinter.printToDo(task);
+        return new ResponseEntity(toDoPrinter.printToDo(task), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/")
-    public ResponseEntity<Task> add(@RequestBody Task task) throws SQLException, WrongToDoTypeException {
+    public ResponseEntity<Task> add(@RequestBody Task task, @RequestHeader HttpHeaders headers) throws SQLException, WrongToDoTypeException {
+        if (!checkIfAuthorized(headers.get("Authorization"))) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
         task.setProject(task.getProjectUuid());
         task.save();
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/attachToProject")
-    public ResponseEntity attachToProject(@RequestParam("id") String id, @RequestParam("projectId") String projectId) {
+    public ResponseEntity attachToProject(@RequestParam("id") String id, @RequestParam("projectId") String projectId, @RequestHeader HttpHeaders headers) {
+        if (!checkIfAuthorized(headers.get("Authorization"))) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
         Task task;
         Project project;
         try {
@@ -52,5 +70,15 @@ public class TaskController {
             }
         }
         return new ResponseEntity("Attached task with id '" + id + "' to project with id '" + projectId + "'", HttpStatus.OK);
+    }
+
+    private boolean checkIfAuthorized(List<String> authorization) {
+        try {
+            String key = authorization.get(0);
+            System.out.println(key);
+            return Authorizator.isUser(key);
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 }

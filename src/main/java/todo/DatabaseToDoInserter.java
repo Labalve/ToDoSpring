@@ -73,13 +73,13 @@ public class DatabaseToDoInserter {
     }
 
     private boolean alreadyExists(ToDo toDo) throws SQLException {
-        if (countOf(toDo, "uuid") > 0) {
+        if (countOf(toDo) > 0) {
             return true;
         }
         return false;
     }
 
-    private int countOf(ToDo toDo, String column) throws SQLException {
+    private int countOf(ToDo toDo) throws SQLException {
         preparedStatement = databaseConnection.prepareStatement("USE " + databaseName + ";");
         preparedStatement.execute();
         if (toDo instanceof Task) {
