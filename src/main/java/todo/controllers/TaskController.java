@@ -69,7 +69,10 @@ public class TaskController {
         if (!checkIfAuthorized(headers.get("Authorization"))) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
-        task.setAuthor(headers.get("Authorization").get(0));
+        DatabaseUserSelector userSelector = new DatabaseUserSelector();
+        String key = headers.get("Authorization").get(0);
+        User user = userSelector.selectUserByKey(key);
+        task.setAuthor(user.getUuid());
         task.setProject(task.getProjectUuid());
         task.save();
         return new ResponseEntity<>(task, HttpStatus.OK);
@@ -97,7 +100,7 @@ public class TaskController {
                 return new ResponseEntity("Attaching failed.", HttpStatus.FORBIDDEN);
             }
         }
-        return new ResponseEntity("Attached task with id '" + id + "' to project with id '" + projectId + "'", HttpStatus.OK);
+        return new ResponseEntity("Task with id '" + id + "' has been attached to project with id '" + projectId + "'", HttpStatus.OK);
     }
 
     private boolean checkIfAuthorized(List<String> authorization) {

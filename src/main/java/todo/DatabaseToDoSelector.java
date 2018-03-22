@@ -67,6 +67,7 @@ public class DatabaseToDoSelector {
         projectBean.setTitle(resultSet.getString("title"));
         projectBean.setDescription(resultSet.getString("description"));
         projectBean.setOutcome(Outcome.valueOf(resultSet.getString("outcome")));
+        projectBean.setAuthor(resultSet.getString("author_id"));
         return projectBean;
     }
 
@@ -86,6 +87,7 @@ public class DatabaseToDoSelector {
         taskBean.setTitle(resultSet.getString("title"));
         taskBean.setDescription(resultSet.getString("description"));
         taskBean.setOutcome(Outcome.valueOf(resultSet.getString("outcome")));
+        taskBean.setAuthor(resultSet.getString("author_id"));
         try {
             String project_id = resultSet.getString("project_id");
             if (!resultSet.wasNull()) {
@@ -153,11 +155,12 @@ public class DatabaseToDoSelector {
     private int countOfType(String type) throws SQLException {
         preparedStatement = databaseConnection.prepareStatement("USE " + databaseName + ";");
         preparedStatement.execute();
-        if (type == "Task") {
-            preparedStatement = databaseConnection.prepareStatement("SELECT COUNT(*) FROM " + TASKS_TABLE_NAME + ";");
+        if (type.equals("Task")) {
+            preparedStatement = databaseConnection.prepareStatement("SELECT COUNT(*) FROM " + TASKS_TABLE_NAME + " WHERE author_id = ?;");
         } else {
-            preparedStatement = databaseConnection.prepareStatement("SELECT COUNT(*) FROM " + PROJECTS_TABLE_NAME + ";");
+            preparedStatement = databaseConnection.prepareStatement("SELECT COUNT(*) FROM " + PROJECTS_TABLE_NAME + " WHERE author_id = ?;");
         }
+        preparedStatement.setString(1, userUuid);
         ResultSet resultSet = preparedStatement.executeQuery();
         int count;
         if (resultSet.next()) {

@@ -52,6 +52,7 @@ public class DatabaseToDoInserter {
         preparedStatement = databaseConnection.prepareStatement("USE " + databaseName + ";");
         preparedStatement.execute();
         preparedStatement = databaseConnection.prepareStatement(insertCommand);
+        System.out.println(preparedStatement.toString());
         preparedStatement.execute();
         preparedStatement.close();
     }
@@ -108,7 +109,7 @@ public class DatabaseToDoInserter {
         } catch (ToDoDateDueNullException e) {
             taskInsertCommand += "NULL";
         }
-        taskInsertCommand += taskBean.getAuthorUuid();
+        taskInsertCommand += ", '" + taskBean.getAuthorUuid() + "'";
         taskInsertCommand += ");";  
         return taskInsertCommand;
     }
@@ -136,7 +137,7 @@ public class DatabaseToDoInserter {
         } catch (ToDoDateDueNullException e) {
             projectInsertCommand += "NULL";
         }
-        projectInsertCommand += projectBean.getAuthorUuid();
+        projectInsertCommand += ", '" + projectBean.getAuthorUuid() + "'";
         projectInsertCommand += ");";
         return projectInsertCommand;
     }
