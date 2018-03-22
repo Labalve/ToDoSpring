@@ -38,15 +38,16 @@ public class DatabaseUserInserter {
         preparedStatement = databaseConnection.prepareStatement("USE " + databaseName + ";");
         preparedStatement.execute();
         preparedStatement = databaseConnection.prepareStatement(insertCommand);
-        preparedStatement.setString(1, user.getKey());
-        preparedStatement.setString(2, String.valueOf(user.getRole()));
+        preparedStatement.setString(1, user.getUuid());
+        preparedStatement.setString(2, user.getKey());
+        preparedStatement.setString(3, String.valueOf(user.getRole()));
         preparedStatement.execute();
         preparedStatement.close();
     }
     
     private String getUserInsertCommand() {
-        String userInsertCommand = "INSERT INTO " + USERS_TABLE_NAME + " (api_key, role) ";
-        userInsertCommand += "VALUES (?, ?);";
+        String userInsertCommand = "INSERT INTO " + USERS_TABLE_NAME + " (uuid, api_key, role) ";
+        userInsertCommand += "VALUES (?, ?, ?);";
         return userInsertCommand;
     }
 

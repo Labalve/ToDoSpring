@@ -13,16 +13,16 @@ enum Outcome {
  *
  * @author Labalve
  */
-abstract class ToDo implements ToDoPrintable {
-
+public abstract class ToDo implements ToDoPrintable {
 
     private String uuid;
-    String title;
-    String description = "";
-    Date dateDue;
-    Outcome outcome = Outcome.NEW;
-    String test;
-    
+    private String title;
+    private String description = "";
+    private Date dateDue;
+    private Outcome outcome = Outcome.NEW;
+    private String authorUuid;
+    private User author;
+
     public ToDo() {
         UUID uuid = UUID.randomUUID();
         this.uuid = uuid.toString();
@@ -32,13 +32,13 @@ abstract class ToDo implements ToDoPrintable {
         DatabaseToDoInserter databaseToDoInserter = new DatabaseToDoInserter();
         databaseToDoInserter.saveToDo(this);
     }
-    
+
     //  hack to go around different testing database
     public void testSave() throws SQLException {
         DatabaseToDoInserter databaseToDoInserter = new DatabaseToDoInserter("mock_database01");
         databaseToDoInserter.saveToDo(this);
     }
-    
+
     public String getUuid() {
         return uuid;
     }
@@ -66,7 +66,7 @@ abstract class ToDo implements ToDoPrintable {
     public Outcome getOutcome() {
         return outcome;
     }
-    
+
     public void setOutcome(Outcome outcome) {
         this.outcome = outcome;
     }
@@ -81,6 +81,36 @@ abstract class ToDo implements ToDoPrintable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getAuthorUuid() {
+        return authorUuid;
+    }
+
+    User getAuthor() {
+        if (author == null) {
+            try {
+                DatabaseUserSelector userSelector = new DatabaseUserSelector();
+                User user = userSelector.selectUser(this.authorUuid);
+                setAuthor(user);
+            } catch (SQLException | IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+        this.authorUuid = author.getUuid();
+    }
+
+    public void setAuthor(String authorUuid) {
+        this.authorUuid = authorUuid;
+    }
+
+    public void setProject(String uuid) throws WrongToDoTypeException, SQLException {
+        this.authorUuid = uuid;
     }
 
 }

@@ -12,7 +12,7 @@ interface ToDoPrintable {
 
     String getDescription();
 
-    static String[] getAllUuids() {
+    static String[] getAllUuids(User user) {
         return null;
     }
 

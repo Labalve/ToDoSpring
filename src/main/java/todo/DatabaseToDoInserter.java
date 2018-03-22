@@ -100,7 +100,7 @@ public class DatabaseToDoInserter {
     }
 
     private String getTaskInsertCommand(Task taskBean) {
-        String taskInsertCommand = "INSERT INTO " + TASKS_TABLE_NAME + " (uuid, title, description, project_id, outcome, date_due) ";
+        String taskInsertCommand = "INSERT INTO " + TASKS_TABLE_NAME + " (uuid, title, description, project_id, outcome, date_due, author_id) ";
         taskInsertCommand += "VALUES ('" + taskBean.getUuid() + "','" + taskBean.getTitle() + "','" + taskBean.getDescription() + "'," + ((taskBean.getProjectUuid() == null) ? "NULL" : "'" + taskBean.getProjectUuid() + "'") + ",'" + taskBean.getOutcome() + "',";
         try {
             java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(taskBean.getDateDue().getTime());
@@ -108,6 +108,7 @@ public class DatabaseToDoInserter {
         } catch (ToDoDateDueNullException e) {
             taskInsertCommand += "NULL";
         }
+        taskInsertCommand += taskBean.getAuthorUuid();
         taskInsertCommand += ");";  
         return taskInsertCommand;
     }
@@ -127,7 +128,7 @@ public class DatabaseToDoInserter {
     }
 
     private String getProjectInsertCommand(Project projectBean) {
-        String projectInsertCommand = "INSERT INTO " + PROJECTS_TABLE_NAME + " (uuid, title, description, outcome, date_due) ";
+        String projectInsertCommand = "INSERT INTO " + PROJECTS_TABLE_NAME + " (uuid, title, description, outcome, date_due, author_id) ";
         projectInsertCommand += "VALUES ('" + projectBean.getUuid() + "','" + projectBean.getTitle() + "','" + projectBean.getDescription() + "','" + projectBean.getOutcome() + "',";
         try {
             java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(projectBean.getDateDue().getTime());
@@ -135,6 +136,7 @@ public class DatabaseToDoInserter {
         } catch (ToDoDateDueNullException e) {
             projectInsertCommand += "NULL";
         }
+        projectInsertCommand += projectBean.getAuthorUuid();
         projectInsertCommand += ");";
         return projectInsertCommand;
     }

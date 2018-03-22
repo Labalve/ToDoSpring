@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import todo.InvalidToDoIdException;
 import todo.Project;
+import todo.Task;
 import todo.ToDoFactory;
+import todo.DatabaseUserSelector;
+import todo.ToDo;
 import todo.ToDoPrinter;
+import todo.User;
 import todo.WrongToDoTypeException;
 
 @RestController
@@ -33,6 +37,9 @@ public class ProjectController {
         Project project;
         try {
             project = (Project) ToDoFactory.getBean("Project", id);
+            if (!checkIsAuthor(headers.get("Authorization"), project)) {
+                return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            }
         } catch (SQLException | InvalidToDoIdException | WrongToDoTypeException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
         }
@@ -47,7 +54,10 @@ public class ProjectController {
         }
         ToDoPrinter toDoPrinter = new ToDoPrinter();
         try {
-            return new ResponseEntity(toDoPrinter.printAllProjects(), HttpStatus.OK);
+            DatabaseUserSelector userSelector = new DatabaseUserSelector();
+            String key = headers.get("Authorization").get(0);
+            User user = userSelector.selectUserByKey(key);
+            return new ResponseEntity(toDoPrinter.printAllProjects(user), HttpStatus.OK);
         } catch (SQLException | InvalidToDoIdException | WrongToDoTypeException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
         }
@@ -58,6 +68,10 @@ public class ProjectController {
         if (!checkIfAuthorized(headers.get("Authorization"))) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
+        DatabaseUserSelector userSelector = new DatabaseUserSelector();
+        String key = headers.get("Authorization").get(0);
+        User user = userSelector.selectUserByKey(key);
+        project.setAuthor(user.getUuid());
         project.save();
         return new ResponseEntity("Project " + project.getTitle() + " saved.", HttpStatus.OK);
     }
@@ -70,6 +84,9 @@ public class ProjectController {
         Project project;
         try {
             project = (Project) ToDoFactory.getBean("Project", id);
+            if (!checkIsAuthor(headers.get("Authorization"), project)) {
+                return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            }
         } catch (SQLException | InvalidToDoIdException | WrongToDoTypeException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
         }
@@ -84,6 +101,15 @@ public class ProjectController {
             String key = authorization.get(0);
             return Authorizator.isUser(key);
         } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    private boolean checkIsAuthor(List<String> authorization, ToDo toDo) {
+        try {
+            String key = authorization.get(0);
+            return Authorizator.checkIsAuthor(key, toDo);
+        } catch (NullPointerException | SQLException e) {
             return false;
         }
     }

@@ -40,9 +40,9 @@ public class Task extends ToDo {
         return projectUuid;
     }
         
-    public static String[] getAllUuids() throws SQLException{
+    public static String[] getAllUuids(User user) throws SQLException{
         DatabaseToDoSelector databaseToDoSelector = new DatabaseToDoSelector();
-        return databaseToDoSelector.getAllTaskUuids();
+        return databaseToDoSelector.getAllTaskUuids(user);
     }
 
 }

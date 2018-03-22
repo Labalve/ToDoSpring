@@ -20,8 +20,8 @@ public class ToDoPrinter {
         }
     }
 
-    public String printAllTasks() throws SQLException, WrongToDoTypeException, InvalidToDoIdException {
-        String[] uuids = Task.getAllUuids();
+    public String printAllTasks(User user) throws SQLException, WrongToDoTypeException, InvalidToDoIdException {
+        String[] uuids = Task.getAllUuids(user);
         String allTasks = "<tasks>";
         for (String uuid : uuids) {
             allTasks += printToDo(ToDoFactory.getBean("Task", uuid));
@@ -29,8 +29,8 @@ public class ToDoPrinter {
         return allTasks + "</tasks>";
     }
 
-    public String printAllProjects() throws SQLException, WrongToDoTypeException, InvalidToDoIdException {
-        String[] uuids = Project.getAllUuids();
+    public String printAllProjects(User user) throws SQLException, WrongToDoTypeException, InvalidToDoIdException {
+        String[] uuids = Project.getAllUuids(user);
         String allProjects = "<projects>";
         for (String uuid : uuids) {
             allProjects += printToDo(ToDoFactory.getBean("Project", uuid));

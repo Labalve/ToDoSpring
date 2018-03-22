@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import todo.DatabaseConnector;
+import todo.DatabaseUserSelector;
+import todo.ToDo;
 import todo.User;
 import todo.User.Role;
 
@@ -17,10 +19,16 @@ public class Authorizator {
     static Authorizator instance;
 
     private static final String USERS_TABLE_NAME = "users";
-     
+
     private static final String DATABASE_NAME = "ToDo";
-     
+
     Connection databaseConnection;
+
+    static boolean checkIsAuthor(String key, ToDo toDo) throws SQLException {
+        DatabaseUserSelector userSelector = new DatabaseUserSelector();
+        User user = userSelector.selectUserByKey(key);
+        return user.getUuid().equals(toDo.getAuthorUuid());
+    }
 
     private Authorizator() {
         try {
@@ -82,8 +90,8 @@ public class Authorizator {
             return false;
         }
     }
-    
-    private Role getKeyRole(String key) throws SQLException{
+
+    private Role getKeyRole(String key) throws SQLException {
         PreparedStatement preparedStatement = databaseConnection.prepareStatement("SELECT role FROM users WHERE api_key = '?';");
         preparedStatement.setString(1, key);
         ResultSet resultSet = preparedStatement.executeQuery();

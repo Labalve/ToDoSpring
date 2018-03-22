@@ -20,6 +20,7 @@ public class DatabaseToDoSelector {
     private PreparedStatement preparedStatement;
     private String query;
     private String uuid;
+    private String userUuid;
 
     private String toDoClass;
 
@@ -123,13 +124,15 @@ public class DatabaseToDoSelector {
         }
     }
 
-    String[] getAllTaskUuids() throws SQLException {
+    String[] getAllTaskUuids(User user) throws SQLException {
         toDoClass = "Task";
+        userUuid = user.getUuid();
         return getAllUuidsOfChosenType();
     }
 
-    String[] getAllProjectUuids() throws SQLException {
+    String[] getAllProjectUuids(User user) throws SQLException {
         toDoClass = "Project";
+        userUuid = user.getUuid();
         return getAllUuidsOfChosenType();
     }
     
@@ -137,7 +140,8 @@ public class DatabaseToDoSelector {
         String[] tasksUuids = new String[countOfType(toDoClass)];
         preparedStatement = databaseConnection.prepareStatement("USE " + databaseName + ";");
         preparedStatement.execute();
-        preparedStatement = databaseConnection.prepareStatement("SELECT `uuid` FROM " + (toDoClass.equals("Task") ? TASKS_TABLE_NAME : PROJECTS_TABLE_NAME ) + ";");
+        preparedStatement = databaseConnection.prepareStatement("SELECT `uuid` FROM " + (toDoClass.equals("Task") ? TASKS_TABLE_NAME : PROJECTS_TABLE_NAME ) + " WHERE author_id = ?;");
+        preparedStatement.setString(1, userUuid);
         ResultSet resultSet = preparedStatement.executeQuery();
         int i = 0;
         while (resultSet.next()) {

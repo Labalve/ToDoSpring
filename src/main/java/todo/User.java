@@ -3,6 +3,7 @@ package todo;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.SQLException;
+import java.util.UUID;
 import javax.xml.bind.DatatypeConverter;
 
 /**
@@ -18,9 +19,24 @@ public class User {
     public Role getRole() {
         return role;
     }
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public String getKey() {
         return key;
+    }
+    
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getUuid(){
+        return uuid;
+    }
+    
+    public void setUuid(String uuid){
+        this.uuid = uuid;
     }
     
     public void save() throws SQLException {
@@ -28,11 +44,14 @@ public class User {
         databaseUserInserter.insertUser(this);
     }
 
+    private String uuid;
     private String key;
     private Role role;
 
     public User() {
         try {
+            UUID uuid = UUID.randomUUID();
+            this.uuid = uuid.toString();
             this.role = Role.USER;
             this.key = generateKey();
         } catch (NoSuchAlgorithmException e) {
