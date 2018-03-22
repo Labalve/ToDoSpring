@@ -113,6 +113,7 @@ public class DatabaseToDoInserterTest {
                 + "project_id VARCHAR(50),"
                 + "date_due DATETIME,"
                 + "outcome VARCHAR(30),"
+                + "author_id VARCHAR(30),"
                 + "FOREIGN KEY (project_id) REFERENCES projects(uuid));";
         return createCommand;
     }
@@ -122,6 +123,7 @@ public class DatabaseToDoInserterTest {
                 + "title VARCHAR(30),"
                 + "description VARCHAR(120),"
                 + "date_due DATETIME,"
+                + "author_id VARCHAR(30),"
                 + "outcome VARCHAR(30));";
         return createCommand;
     }

@@ -65,7 +65,7 @@ public class TaskController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/")
-    public ResponseEntity<Task> add(@RequestBody Task task, @RequestHeader HttpHeaders headers) throws SQLException, WrongToDoTypeException {
+    public ResponseEntity add(@RequestBody Task task, @RequestHeader HttpHeaders headers) throws SQLException, WrongToDoTypeException {
         if (!checkIfAuthorized(headers.get("Authorization"))) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
@@ -75,7 +75,8 @@ public class TaskController {
         task.setAuthor(user.getUuid());
         task.setProject(task.getProjectUuid());
         task.save();
-        return new ResponseEntity<>(task, HttpStatus.OK);
+        ToDoPrinter toDoPrinter = new ToDoPrinter();
+        return new ResponseEntity(toDoPrinter.printToDo(task), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/attachToProject")

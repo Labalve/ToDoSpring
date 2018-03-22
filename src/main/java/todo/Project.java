@@ -9,20 +9,11 @@ import java.util.ArrayList;
  */
 public class Project extends ToDo {
 
-    int importance;
     ArrayList<Task> tasks;
     
     Project(){
         super();
         tasks = new ArrayList<>();
-    }
-    
-    public int getImportance() {
-        return importance;
-    }
-    
-    public void setImportance(int importance) {
-        this.importance = importance;
     }
     
     public void attachTask(Task task){

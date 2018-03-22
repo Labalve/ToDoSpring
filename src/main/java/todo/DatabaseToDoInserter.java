@@ -109,7 +109,7 @@ public class DatabaseToDoInserter {
         } catch (ToDoDateDueNullException e) {
             taskInsertCommand += "NULL";
         }
-        taskInsertCommand += ", '" + taskBean.getAuthorUuid() + "'";
+        taskInsertCommand += taskBean.getAuthorUuid() == null ? ", NULL" : ", '" + taskBean.getAuthorUuid() + "'";
         taskInsertCommand += ");";  
         return taskInsertCommand;
     }
@@ -137,7 +137,7 @@ public class DatabaseToDoInserter {
         } catch (ToDoDateDueNullException e) {
             projectInsertCommand += "NULL";
         }
-        projectInsertCommand += ", '" + projectBean.getAuthorUuid() + "'";
+        projectInsertCommand += projectBean.getAuthorUuid() == null ? ", NULL" : ", '" + projectBean.getAuthorUuid() + "'";
         projectInsertCommand += ");";
         return projectInsertCommand;
     }

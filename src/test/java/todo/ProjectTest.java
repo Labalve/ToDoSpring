@@ -19,27 +19,26 @@ import org.junit.Ignore;
  *
  * @author Labalve
  */
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class})
 public class ProjectTest {
 
     @Test
     @Ignore
-    public void testProjectDateSetting() throws WrongToDoTypeException, ToDoDateDueNullException  {
+    public void testProjectDateSetting() throws WrongToDoTypeException, ToDoDateDueNullException {
         Project projectBean = new Project();
         projectBean.setDateDue(setDateForTheTest());
         Assert.assertEquals(setDateForTheTest().getTime(), projectBean.getDateDue().getTime());
     }
-    
-    private Date setDateForTheTest(){
+
+    private Date setDateForTheTest() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2005);
         cal.set(Calendar.MONTH, Calendar.JANUARY);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         return cal.getTime();
     }
-    
+
     @Test
     public void testTaskBinding() {
         Project projectBean = new Project();
@@ -52,19 +51,19 @@ public class ProjectTest {
         tasks.add(taskBean02);
         Assert.assertEquals(tasks, projectBean.getTaskList());
     }
-    
+
     @Test(expected = ToDoDateDueNullException.class)
     public void testToDoDateDueNullException() throws ToDoDateDueNullException, WrongToDoTypeException {
         Project projectBean = new Project();
         projectBean.getDateDue();
     }
-    
+
     @Test
     public void testProjectSave() throws WrongToDoTypeException, SQLException {
         dropTestDatabase();
         createTestDatabase();
         createTestTables();
-        Project projectBean = (Project) ToDoTestingFactory.getBean ("Project", "test_project01");
+        Project projectBean = (Project) ToDoTestingFactory.getBean("Project", "test_project01");
         try {
             projectBean.testSave();
         } catch (SQLException e) {
@@ -72,7 +71,7 @@ public class ProjectTest {
         }
         dropTestDatabase();
     }
-    
+
     private void createTestDatabase() throws SQLException {
         DatabaseConnector databaseConnector = new DatabaseConnector();
         Connection databaseConnection = databaseConnector.getDatabaseConnection();
@@ -125,6 +124,7 @@ public class ProjectTest {
                 + "project_id VARCHAR(50),"
                 + "date_due DATETIME,"
                 + "outcome VARCHAR(30),"
+                + "author_id VARCHAR(30),"
                 + "FOREIGN KEY (project_id) REFERENCES projects(uuid));";
         return createCommand;
     }
@@ -134,6 +134,7 @@ public class ProjectTest {
                 + "title VARCHAR(30),"
                 + "description VARCHAR(120),"
                 + "date_due DATETIME,"
+                + "author_id VARCHAR(30),"
                 + "outcome VARCHAR(30));";
         return createCommand;
     }
