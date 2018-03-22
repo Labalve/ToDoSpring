@@ -16,7 +16,12 @@ CREATE TABLE tasks (
     outcome VARCHAR(30),
     FOREIGN KEY (project_id) REFERENCES projects(uuid));
 CREATE TABLE users (
-    key VARCHAR(50) PRIMARY KEY,
+    uuid VARCHAR(50) PRIMARY KEY,
+    api_key VARCHAR(30),
     role VARCHAR(20));
 INSERT INTO tasks (uuid, title, description, project_id, date_due, outcome)
     VALUES ('test_task01', 'Test task01', 'Task01 description', NULL, '20181205 10:00:00 AM', 'NEW');
+INSERT INTO users (uuid, api_key, role)
+    VALUES ('test_admin', 'admin', 'ADMIN');
+INSERT INTO users (uuid, api_key, role)
+    VALUES ('test_user', 'user', 'USER');

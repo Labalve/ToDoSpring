@@ -41,6 +41,19 @@ public class TaskController {
         return new ResponseEntity(toDoPrinter.printToDo(task), HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/getAll")
+    public ResponseEntity getAll(@RequestHeader HttpHeaders headers) {
+        if (!checkIfAuthorized(headers.get("Authorization"))) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+        ToDoPrinter toDoPrinter = new ToDoPrinter();
+        try {
+            return new ResponseEntity(toDoPrinter.printAllTasks(), HttpStatus.OK);
+        } catch (SQLException | InvalidToDoIdException | WrongToDoTypeException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/")
     public ResponseEntity<Task> add(@RequestBody Task task, @RequestHeader HttpHeaders headers) throws SQLException, WrongToDoTypeException {
         if (!checkIfAuthorized(headers.get("Authorization"))) {

@@ -46,7 +46,7 @@ public class DatabaseUserInserter {
     
     private String getUserInsertCommand() {
         String userInsertCommand = "INSERT INTO " + USERS_TABLE_NAME + " (api_key, role) ";
-        userInsertCommand += "VALUES ('?', '?');";
+        userInsertCommand += "VALUES (?, ?);";
         return userInsertCommand;
     }
 

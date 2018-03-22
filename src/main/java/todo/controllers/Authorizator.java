@@ -17,7 +17,9 @@ public class Authorizator {
     static Authorizator instance;
 
     private static final String USERS_TABLE_NAME = "users";
-    
+     
+    private static final String DATABASE_NAME = "ToDo";
+     
     Connection databaseConnection;
 
     private Authorizator() {
@@ -41,6 +43,7 @@ public class Authorizator {
         try {
             return authorizator.checkIfIsUser(key);
         } catch (SQLException e) {
+            System.out.println("key-checking error: " + e.getMessage());
             return false;
         }
     }
@@ -55,7 +58,9 @@ public class Authorizator {
     }
 
     private boolean checkIfIsUser(String key) throws SQLException {
-        PreparedStatement preparedStatement = databaseConnection.prepareStatement("SELECT COUNT(*) FROM users WHERE api_key = '?';");
+        PreparedStatement preparedStatement = databaseConnection.prepareStatement("USE " + DATABASE_NAME + ";");
+        preparedStatement.execute();
+        preparedStatement = databaseConnection.prepareStatement("SELECT COUNT(*) FROM users WHERE api_key = ?;");
         preparedStatement.setString(1, key);
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
@@ -66,7 +71,9 @@ public class Authorizator {
     }
 
     private boolean checkIfIsAdmin(String key) throws SQLException {
-        PreparedStatement preparedStatement = databaseConnection.prepareStatement("SELECT COUNT(*) FROM users WHERE api_key = '?' AND role = '" + User.Role.ADMIN + "';");
+        PreparedStatement preparedStatement = databaseConnection.prepareStatement("USE " + DATABASE_NAME + ";");
+        preparedStatement.execute();
+        preparedStatement = databaseConnection.prepareStatement("SELECT COUNT(*) FROM users WHERE api_key = ? AND role = '" + User.Role.ADMIN + "';");
         preparedStatement.setString(1, key);
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {

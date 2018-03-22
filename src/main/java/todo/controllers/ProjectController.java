@@ -5,6 +5,8 @@ package todo.controllers;
  * @author Labalve
  */
 import java.sql.SQLException;
+import java.util.List;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,8 +26,8 @@ import todo.WrongToDoTypeException;
 public class ProjectController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
-    public ResponseEntity get(@RequestParam("id") String id, @RequestHeader(value = "Authorization") String key) {
-        if (!checkIfAuthorized(key)) {
+    public ResponseEntity get(@RequestParam("id") String id, @RequestHeader HttpHeaders headers) {
+        if (!checkIfAuthorized(headers.get("Authorization"))) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
         Project project;
@@ -39,8 +41,8 @@ public class ProjectController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getAll")
-    public ResponseEntity getAll(@RequestHeader(value = "Authorization") String key) {
-        if (!checkIfAuthorized(key)) {
+    public ResponseEntity getAll(@RequestHeader HttpHeaders headers) {
+        if (!checkIfAuthorized(headers.get("Authorization"))) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
         ToDoPrinter toDoPrinter = new ToDoPrinter();
@@ -52,8 +54,8 @@ public class ProjectController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/")
-    public ResponseEntity add(@RequestBody Project project, @RequestHeader(value = "Authorization") String key) throws SQLException, WrongToDoTypeException {
-        if (!checkIfAuthorized(key)) {
+    public ResponseEntity add(@RequestBody Project project, @RequestHeader HttpHeaders headers) throws SQLException, WrongToDoTypeException {
+        if (!checkIfAuthorized(headers.get("Authorization"))) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
         project.save();
@@ -61,8 +63,8 @@ public class ProjectController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getTaskList")
-    public ResponseEntity getAttachedTasks(@RequestParam("id") String id, @RequestHeader(value = "Authorization") String key) {
-        if (!checkIfAuthorized(key)) {
+    public ResponseEntity getAttachedTasks(@RequestParam("id") String id, @RequestHeader HttpHeaders headers) {
+        if (!checkIfAuthorized(headers.get("Authorization"))) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
         Project project;
@@ -77,7 +79,12 @@ public class ProjectController {
         return new ResponseEntity(tasks, HttpStatus.OK);
     }
 
-    private boolean checkIfAuthorized(String key) {
-        return Authorizator.isUser(key);
+    private boolean checkIfAuthorized(List<String> authorization) {
+        try {
+            String key = authorization.get(0);
+            return Authorizator.isUser(key);
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 }

@@ -26,7 +26,7 @@ public class ToDoPrinter {
         for (String uuid : uuids) {
             allTasks += printToDo(ToDoFactory.getBean("Task", uuid));
         }
-        return allTasks;
+        return allTasks + "</tasks>";
     }
 
     public String printAllProjects() throws SQLException, WrongToDoTypeException, InvalidToDoIdException {
@@ -35,7 +35,7 @@ public class ToDoPrinter {
         for (String uuid : uuids) {
             allProjects += printToDo(ToDoFactory.getBean("Project", uuid));
         }
-        return allProjects;
+        return allProjects + "</projects>";
     }
 
     private String printXMLToDo() throws WrongToDoTypeException {
